@@ -23,14 +23,16 @@ const Navbar = () => {
         <ul className="flex items-center gap-[1.25rem]">
           {session?.user ? (
             <div>
-              <Image
-                onClick={handleShowDropdown}
-                src={person}
-                alt="profile-img"
-                width={45}
-                height={45}
-                className="object-cover rounded-[50%] cursor-pointer"
-              />
+              {session?.user?.profileImg && (
+                <Image
+                  onClick={handleShowDropdown}
+                  src={person}
+                  alt="profile-img"
+                  width={45}
+                  height={45}
+                  className="object-cover rounded-[50%] cursor-pointer"
+                />
+              )}
 
               {showDropdown && (
                 <div className="absolute bg-[#efefef] p-[1rem] flex flex-col items-center gap-[1.25rem] top-[2.5rem] right-[-3rem] rounded-[8px]">
