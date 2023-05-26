@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/db"
 import { verifyJwtToken } from "@/lib/jwt"
 import Blog from "@/models/Blog"
+import slugify from "slugify"
+import DOMPurify from "isomorphic-dompurify"
 
 export async function GET(req) {
   await dbConnect()
@@ -17,7 +19,6 @@ export async function POST(req) {
   await dbConnect()
 
   const accessToken = req.headers.get("authorization")
-
   const decodedToken = verifyJwtToken(accessToken)
 
   if (!accessToken || !decodedToken) {
@@ -29,7 +30,20 @@ export async function POST(req) {
 
   try {
     const body = await req.json()
-    const newBlog = await Blog.create(body)
+    const { cleanContent, title } = body
+    const content = DOMPurify.sanitize(cleanContent)
+    const slug = slugify(title, { lower: true })
+
+    const newBlog = await Blog.create({ ...body, content, slug })
+
+    if (!newBlog._id) {
+      return new Response(
+        JSON.stringify({
+          status: "error",
+          message: "Unable to create blog post!",
+        })
+      )
+    }
 
     return new Response(
       JSON.stringify({

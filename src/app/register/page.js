@@ -78,6 +78,9 @@ const Register = () => {
     <div className="mt-[5rem] h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
         <h2 className="text-[32px] text-[#222] tracking-[1px]">Register</h2>
+        <p className="text-[12px] text-[#555]">
+          Register now and start writing blogs!
+        </p>
         <form
           onSubmit={handleSubmit}
           className="mt-[2rem] w-[25%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem]"
@@ -134,7 +137,7 @@ const Register = () => {
 
           <label
             htmlFor="image"
-            className="w-full flex items-center gap-[1.25rem] text-[18px] cursor-pointer"
+            className="w-full flex items-center gap-[1.25rem] cursor-pointer"
           >
             Upload Image <AiOutlineFileImage />
           </label>
@@ -150,7 +153,7 @@ const Register = () => {
           <div className="text-[16px] mt-[1.75rem] text-center">
             Already have an account? <br />
             <Link
-              href="/register"
+              href="/login"
               className="cursor-pointer text-underline hover:text-[#555] underline"
             >
               Login Now!

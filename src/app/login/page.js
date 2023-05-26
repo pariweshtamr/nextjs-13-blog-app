@@ -52,6 +52,9 @@ const Login = () => {
     <div className="mt-[5rem] h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
         <h2 className="text-[32px] text-[#222] tracking-[1px]">Login</h2>
+        <p className="text-[12px] text-[#555]">
+          Login to access and manage your blog posts
+        </p>
         <form
           onSubmit={handleSubmit}
           className="mt-[2rem] w-[25%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem]"

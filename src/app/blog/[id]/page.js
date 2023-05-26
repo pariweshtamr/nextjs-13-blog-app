@@ -17,6 +17,8 @@ import { toast } from "react-toastify"
 import { format } from "timeago.js"
 import person from "../../../../public/devbw.png"
 import Comment from "@/components/comment/Comment"
+import DOMPurify from "dompurify"
+import parse from "html-react-parser"
 
 const BlogDetails = (obj) => {
   const [post, setPost] = useState("")
@@ -120,6 +122,10 @@ const BlogDetails = (obj) => {
     session && fetchBlogs()
   }, [session])
 
+  let clean = DOMPurify.sanitize(post?.content, {
+    USE_PROFILES: { html: true },
+  })
+
   return (
     <div className="min-h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
@@ -172,7 +178,7 @@ const BlogDetails = (obj) => {
         </div>
 
         <div className="p-[0_1rem] w-[750px] flex justify-between items-center mb-[3.75rem]">
-          <p className="">{post?.desc}</p>
+          <p className="">{parse(clean)}</p>
           <span className="font-bold">
             Posted:{" "}
             <span className="font-[500] text-[#666] text-[15px]">

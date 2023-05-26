@@ -9,8 +9,18 @@ const BlogSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
+      default: "",
+    },
+    content: {
+      type: String,
       required: true,
-      min: 6,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
+      index: 1,
+      deafult: "",
     },
     imageUrl: {
       type: String,
