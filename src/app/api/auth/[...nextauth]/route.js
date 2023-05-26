@@ -49,6 +49,8 @@ const handler = NextAuth({
       if (user) {
         token.accessToken = user.accessToken
         token._id = user._id
+        token.username = user.username
+        token.profileImg = user.profileImg
       }
       return token
     },
@@ -56,6 +58,8 @@ const handler = NextAuth({
       if (token) {
         session.user._id = token._id
         session.user.accessToken = token.accessToken
+        session.user.username = token.username
+        session.user.profileImg = token.profileImg
       }
 
       return session

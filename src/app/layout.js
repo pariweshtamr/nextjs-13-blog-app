@@ -1,8 +1,6 @@
 import Navbar from "@/components/navbar/Navbar"
 import "./globals.css"
 import Footer from "@/components/footer/Footer"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import { Provider } from "@/Provider"
 import { Inter } from "next/font/google"
 
@@ -22,7 +20,6 @@ export default function RootLayout({ children, session }) {
           <main className="grow shrink basis-auto">{children}</main>
           <Footer />
         </Provider>
-        <ToastContainer />
       </body>
     </html>
   )

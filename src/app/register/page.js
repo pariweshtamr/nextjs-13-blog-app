@@ -1,7 +1,10 @@
 "use client"
 import { registerUser } from "@/lib/axiosHelper"
+import axios from "axios"
 import Link from "next/link"
 import { useState } from "react"
+import { AiOutlineFileImage } from "react-icons/ai"
+import { MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { toast } from "react-toastify"
 
 const initialState = {
@@ -12,6 +15,10 @@ const initialState = {
 }
 const Register = () => {
   const [form, setForm] = useState(initialState)
+  const [reveal, setReveal] = useState(false)
+  const [photo, setPhoto] = useState("")
+  const cloudName = "ddbttkmhz"
+  const uploadPreset = "next_blog"
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -19,8 +26,35 @@ const Register = () => {
     setForm({ ...form, [name]: value })
   }
 
+  const uploadImage = async () => {
+    if (!photo) return
+
+    const formData = new FormData()
+    formData.append("file", photo)
+    formData.append("upload_preset", uploadPreset)
+
+    try {
+      const { data } = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      )
+
+      const { url } = data
+
+      return url
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    let profileImg
+
+    if (photo) {
+      profileImg = await uploadImage()
+    }
 
     const { confirmPassword, ...rest } = form
 
@@ -32,7 +66,7 @@ const Register = () => {
     }
 
     try {
-      const { status, message } = await registerUser(rest)
+      const { status, message } = await registerUser({ ...rest, profileImg })
       status && toast[status](message)
       setForm(initialState)
     } catch (error) {
@@ -66,15 +100,28 @@ const Register = () => {
             name="email"
             className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
           />
-          <input
-            type="password"
-            placeholder="********"
-            onChange={handleChange}
-            value={form.password}
-            required
-            name="password"
-            className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
-          />
+          <div className="w-full relative">
+            <input
+              type={reveal ? "text" : "password"}
+              placeholder="********"
+              onChange={handleChange}
+              value={form.password}
+              required
+              name="password"
+              className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
+            />
+            {!reveal ? (
+              <MdVisibilityOff
+                onClick={() => setReveal(true)}
+                className="absolute top-1/2 right-[0.8rem] translate-y-[-50%] cursor-pointer text-[1.1rem]"
+              />
+            ) : (
+              <MdVisibility
+                onClick={() => setReveal(false)}
+                className="absolute top-1/2 right-[0.8rem] translate-y-[-50%] cursor-pointer text-[1.1rem]"
+              />
+            )}
+          </div>
           <input
             type="password"
             placeholder="********"
@@ -84,7 +131,20 @@ const Register = () => {
             name="confirmPassword"
             className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
           />
-          <button className="outline-0 p-[0.5rem_1rem] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#22ab22] transition-[150ms] tracking-[0.5px] hover:border-[#22ab22] hover:bg-[#22ab22] hover:text-[#efefef] ">
+
+          <label
+            htmlFor="image"
+            className="w-full flex items-center gap-[1.25rem] text-[18px] cursor-pointer"
+          >
+            Upload Image <AiOutlineFileImage />
+          </label>
+          <input
+            type="file"
+            id="image"
+            style={{ display: "none" }}
+            onChange={(e) => setPhoto(e.target.files[0])}
+          />
+          <button className="outline-0 p-[0.5rem_1rem] rounded-[6px] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#d14201] transition-[150ms] tracking-[0.5px] hover:border-[#d14201] hover:bg-[#d14201] hover:text-[#efefef] ">
             Register
           </button>
           <div className="text-[16px] mt-[1.75rem] text-center">

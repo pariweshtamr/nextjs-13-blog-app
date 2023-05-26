@@ -43,13 +43,15 @@ const BlogCard = ({ blog }) => {
     <div className="w-[23%] h-[400px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.15)] transition-[150ms] rounded-xl hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)]">
       <div className="p-[.8rem] w-full h-full flex flex-col">
         <Link className="" href={`/blog/${blog._id}`}>
-          <Image
-            src={blog?.imageUrl}
-            alt="blog-img"
-            width={350}
-            height={350}
-            className="object-cover rounded-[20px] w-full m-[0_auto] "
-          />
+          {blog?.imageUrl && (
+            <Image
+              src={blog?.imageUrl}
+              alt="blog-img"
+              width={350}
+              height={350}
+              className="object-cover rounded-[20px] w-full m-[0_auto] "
+            />
+          )}
         </Link>
         <div className="flex justify-between items-center">
           <div className="">

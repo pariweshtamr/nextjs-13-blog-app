@@ -5,7 +5,7 @@ import User from "@/models/User"
 export async function POST(req) {
   try {
     await dbConnect()
-    const { username, email, password: pass } = await req.json()
+    const { username, email, profileImg, password: pass } = await req.json()
 
     const isExisting = await User.findOne({ email })
 
@@ -22,6 +22,7 @@ export async function POST(req) {
     const newUser = await User.create({
       username,
       email,
+      profileImg,
       password: hashedPassword,
     })
 

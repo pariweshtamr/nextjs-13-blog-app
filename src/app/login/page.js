@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { toast } from "react-toastify"
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
 const Login = () => {
   const router = useRouter()
   const [form, setForm] = useState(initialState)
+  const [reveal, setReveal] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -37,10 +39,10 @@ const Login = () => {
         callbackUrl: "/",
       })
 
-      if (res?.error == null) {
+      if (res?.error === null) {
         router.push("/")
       } else {
-        toast.error("Error occurred while logging in!")
+        toast.error(res.error)
       }
     } catch (error) {
       console.log(error.message)
@@ -60,17 +62,33 @@ const Login = () => {
             onChange={handleChange}
             value={form.email}
             name="email"
+            required
             className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
           />
-          <input
-            type="password"
-            placeholder="********"
-            onChange={handleChange}
-            value={form.password}
-            name="password"
-            className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
-          />
-          <button className="outline-0 p-[0.5rem_1rem] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#22ab22] transition-[150ms] tracking-[0.5px] hover:border-[#22ab22] hover:bg-[#22ab22] hover:text-[#efefef] ">
+
+          <div className="w-full relative">
+            <input
+              type={reveal ? "text" : "password"}
+              placeholder="********"
+              required
+              onChange={handleChange}
+              value={form.password}
+              name="password"
+              className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
+            />
+            {!reveal ? (
+              <MdVisibilityOff
+                onClick={() => setReveal(true)}
+                className="absolute top-1/2 right-[0.8rem] translate-y-[-50%] cursor-pointer text-[1.1rem]"
+              />
+            ) : (
+              <MdVisibility
+                onClick={() => setReveal(false)}
+                className="absolute top-1/2 right-[0.8rem] translate-y-[-50%] cursor-pointer text-[1.1rem]"
+              />
+            )}
+          </div>
+          <button className="outline-0 p-[0.5rem_1.5rem] rounded-[6px] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#d14201] transition-[150ms] tracking-[0.5px] hover:border-[#d14201] hover:bg-[#d14201] hover:text-[#efefef] ">
             Login
           </button>
           <div className="text-[16px] mt-[1.75rem] text-center">
