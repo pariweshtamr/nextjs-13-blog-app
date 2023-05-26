@@ -1,25 +1,27 @@
-"use client"
 import Navbar from "@/components/navbar/Navbar"
 import "./globals.css"
 import Footer from "@/components/footer/Footer"
-import { SessionProvider } from "next-auth/react"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { Provider } from "@/Provider"
+import { Inter } from "next/font/google"
 
-// export const metadata = {
-//   title: "Next Blog App",
-//   description: "Blog Application",
-// }
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata = {
+  title: "Next Blog App",
+  description: "Blog Application",
+}
 
 export default function RootLayout({ children, session }) {
   return (
     <html lang="en">
-      <body className="min-h-[100vh] flex flex-col">
-        <SessionProvider session={session}>
+      <body className={`${inter.className} min-h-[100vh] flex flex-col`}>
+        <Provider>
           <Navbar />
           <main className="grow shrink basis-auto">{children}</main>
           <Footer />
-        </SessionProvider>
+        </Provider>
         <ToastContainer />
       </body>
     </html>
