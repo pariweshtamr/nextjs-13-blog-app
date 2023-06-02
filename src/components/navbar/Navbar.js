@@ -18,7 +18,7 @@ const Navbar = () => {
   const handleHideDropdown = () => setShowDropdown((prev) => false)
 
   return (
-    <div className="sticky z-[999] h-[80px] w-[100%] bg-[#f8f9fa] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.1)] flex justify-center items-center top-0 left-0">
+    <div className="bg-[#FCF6ED] bg-[url('https://www.transparenttextures.com/patterns/xv.png')] z-[999] h-[100px] w-[100%] flex justify-center items-center top-0 left-0">
       <div className="w-[85%] m-[0 auto] flex justify-between items-center relative">
         <h2 className="text-4xl text-[#d14201]">
           <Link href="/">Blog App</Link>

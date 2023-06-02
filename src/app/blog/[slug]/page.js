@@ -2,7 +2,6 @@
 import {
   addComment,
   deleteBlog,
-  getBlog,
   getComments,
   toggleLike,
 } from "@/lib/axiosHelper"
@@ -15,12 +14,15 @@ import { AiFillDelete, AiFillLike, AiOutlineLike } from "react-icons/ai"
 import { BsFillPencilFill } from "react-icons/bs"
 import { toast } from "react-toastify"
 import { format } from "timeago.js"
-import person from "../../../../public/devbw.png"
 import Comment from "@/components/comment/Comment"
-import DOMPurify from "dompurify"
 import parse from "html-react-parser"
+import { useDispatch, useSelector } from "react-redux"
+import { getSingleBlogAction } from "@/app/redux/blog/blogAction"
+import DOMPurify from "dompurify"
 
 const BlogDetails = (obj) => {
+  const dispatch = useDispatch()
+  const { selectedBlog } = useSelector((state) => state.blog)
   const [post, setPost] = useState("")
   const [isLiked, setIsLiked] = useState("")
   const [postLikes, setPostLikes] = useState("")
@@ -29,15 +31,6 @@ const BlogDetails = (obj) => {
   const { data: session } = useSession()
   const router = useRouter()
 
-  const fetchBlogs = async () => {
-    const { status, blog } = await getBlog(obj.params.id)
-    if (status === "success") {
-      setPost(blog)
-      setIsLiked(blog?.likes?.includes(session?.user?._id))
-      setPostLikes(blog?.likes?.length || 0)
-    }
-  }
-
   const handleComment = async () => {
     if (commentText?.length < 2) {
       return toast.error("Comment must be more than 5 characters long!")
@@ -45,15 +38,22 @@ const BlogDetails = (obj) => {
 
     try {
       const { status, message, comment } = await addComment({
-        blogId: obj.params.id,
+        slug: obj.params.slug,
         authorId: session?.user?._id,
         text: commentText,
         token: session?.user?.accessToken,
       })
 
-      if (status !== "success") {
-        return toast.error(message)
+      if (
+        status === "error" &&
+        message.includes("Request failed with status code 403")
+      ) {
+        toast.error("Please log in to give comments!")
+        return
+      } else if (status === "error") {
+        toast.error(message)
       }
+
       toast[status](message) &&
         setComments((prev) => {
           return [...prev, comment]
@@ -61,7 +61,7 @@ const BlogDetails = (obj) => {
 
       setCommentText("")
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
   }
 
@@ -71,7 +71,7 @@ const BlogDetails = (obj) => {
 
       if (confirmModal) {
         const { status, message } = await deleteBlog({
-          id: obj.params.id,
+          slug: obj.params.slug,
           token: session?.user?.accessToken,
         })
 
@@ -89,7 +89,7 @@ const BlogDetails = (obj) => {
   const handleLike = async () => {
     try {
       const { status } = await toggleLike({
-        id: post._id,
+        slug: post.slug,
         token: session?.user?.accessToken,
       })
 
@@ -110,19 +110,24 @@ const BlogDetails = (obj) => {
   useEffect(() => {
     const fetchComments = async () => {
       const cmnts = await getComments({
-        id: obj.params.id,
-        token: session?.user?.accessToken,
+        slug: obj.params.slug,
       })
       setComments(cmnts)
     }
     fetchComments()
-  }, [session])
+  }, [])
 
   useEffect(() => {
-    session && fetchBlogs()
-  }, [session])
+    dispatch(getSingleBlogAction(obj.params.slug))
+    setPost(selectedBlog)
 
-  let clean = DOMPurify.sanitize(post?.content, {
+    if (selectedBlog) {
+      setIsLiked(selectedBlog?.likes?.includes(session?.user?._id))
+      setPostLikes(selectedBlog?.likes?.length || 0)
+    }
+  }, [dispatch])
+
+  let clean = DOMPurify.sanitize(selectedBlog?.content, {
     USE_PROFILES: { html: true },
   })
 
@@ -130,19 +135,27 @@ const BlogDetails = (obj) => {
     <div className="min-h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
         <Image
-          src={post?.imageUrl}
+          src={selectedBlog?.imageUrl}
           alt="post-img"
-          width={750}
+          width={800}
           height={650}
           className="object-cover mb-[2.5rem]"
         />
-        <div className="p-[0_1rem] w-[750px] flex justify-between items-center mb-[3.75rem]">
-          <h3 className="text-[36px] text-[#333] capitalize">{post?.title}</h3>
-          {post?.authorId?._id === session?.user?._id ? (
+        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
+          <h3 className="text-[36px] text-[#333] capitalize">
+            {selectedBlog?.title}
+            <p className="font-bold text-[14px] text-[#666]">
+              Published:{" "}
+              <span className="font-[500] text-[#666] text-[14px]">
+                {format(selectedBlog?.createdAt)}
+              </span>
+            </p>
+          </h3>
+          {selectedBlog?.authorId?._id === session?.user?._id ? (
             <div className="flex items-center gap-[1rem]">
               <Link
                 className="flex items-center gap-[.75rem] outline-none border border-solid border-transparent bg-[#3eda22] text-[#fff] p-[0.5rem_1.25rem] rounded-[12px] cursor-pointer text-[18px] font-bold transition-[150ms] hover:bg-[#fff] hover:border-[#3eda22] hover:text-[#3eda22]"
-                href={`/blog/edit/${obj.params.id}`}
+                href={`/blog/edit/${obj.params.slug}`}
               >
                 Edit <BsFillPencilFill />
               </Link>
@@ -155,16 +168,16 @@ const BlogDetails = (obj) => {
             </div>
           ) : (
             <div className="flex items-center gap-[.75rem] text-[20px] text-[#444]">
-              Author: <span>{post?.authorId?.username}</span>
+              Author: <span>{selectedBlog?.authorId?.username}</span>
             </div>
           )}
         </div>
 
-        <div className="p-[0_1rem] w-[750px] flex justify-between items-center mb-[3.75rem]">
+        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
           <div className="flex justify-start items-center gap-[1.25rem] text-[18px] font-bold">
             Category:{" "}
             <span className="p-[0.5rem_1.25rem] bg-[#3eda22] text-white rounded-[12px] text-[16px] font-[500]">
-              {post?.category}
+              {selectedBlog?.category}
             </span>
           </div>
           <div className="flex items-center gap-[1rem] cursor-pointer">
@@ -177,24 +190,18 @@ const BlogDetails = (obj) => {
           </div>
         </div>
 
-        <div className="p-[0_1rem] w-[750px] flex justify-between items-center mb-[3.75rem]">
-          <p className="">{parse(clean)}</p>
-          <span className="font-bold">
-            Posted:{" "}
-            <span className="font-[500] text-[#666] text-[15px]">
-              {format(post?.createdAt)}
-            </span>
-          </span>
+        <div className="p-[0_1rem] w-[800px] mb-[3.75rem]">
+          <div className="">{parse(clean)}</div>
         </div>
 
-        <div className="m-[0_auto] mt-[5rem] w-1/2 flex flex-col justify-center items-center border border-solid border-[#555] rounded-[20px]">
+        <div className="m-[0_auto] mt-[5rem] w-[800px] flex flex-col justify-center items-center border border-solid border-[#555] rounded-[20px]">
           <div className="p-[1rem] w-full flex items-center gap-[1.5rem] border-b border-b-solid border-b-[#555]">
             <Image
-              src={person}
-              width={45}
-              height={45}
+              src={session?.user?.profileImg}
+              width={50}
+              height={50}
               alt="random-person"
-              className="object-cover rounded-1/2"
+              className="object-cover rounded-full"
             />
             <input
               type="text"

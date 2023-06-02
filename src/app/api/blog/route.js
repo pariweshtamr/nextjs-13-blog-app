@@ -9,9 +9,14 @@ export async function GET(req) {
 
   try {
     const blogs = await Blog.find({}).limit(16).populate("authorId")
-    return new Response(JSON.stringify(blogs), { status: 200 })
+    return new Response(JSON.stringify({ status: "success", blogs }), {
+      status: 200,
+    })
   } catch (error) {
-    return new Response(JSON.stringify(null), { status: 500 })
+    return new Response(
+      JSON.stringify({ status: "error", message: error.message }),
+      { status: 500 }
+    )
   }
 }
 
@@ -33,6 +38,18 @@ export async function POST(req) {
     const { cleanContent, title } = body
     const content = DOMPurify.sanitize(cleanContent)
     const slug = slugify(title, { lower: true })
+
+    const blogExists = await Blog.findOne({ slug })
+
+    if (blogExists?._id) {
+      return new Response(
+        JSON.stringify({
+          status: "error",
+          message:
+            "A blog post with the same name already exists in our system!",
+        })
+      )
+    }
 
     const newBlog = await Blog.create({ ...body, content, slug })
 

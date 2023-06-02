@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { AiFillLike, AiOutlineLike } from "react-icons/ai"
+import parse from "html-react-parser"
+import DOMPurify from "dompurify"
 
 const BlogCard = ({ blog }) => {
   const { data: session } = useSession()
@@ -32,6 +34,10 @@ const BlogCard = ({ blog }) => {
     }
   }
 
+  let clean = DOMPurify.sanitize(blog?.content, {
+    USE_PROFILES: { html: true },
+  })
+
   useEffect(() => {
     session &&
       blog?.likes &&
@@ -40,36 +46,59 @@ const BlogCard = ({ blog }) => {
   }, [blog?.likes, session])
 
   return (
-    <div className="w-[23%] h-[400px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.15)] transition-[150ms] rounded-xl hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)]">
-      <div className="p-[.8rem] w-full h-full flex flex-col">
-        <Link className="" href={`/blog/${blog._id}`}>
+    <div className="w-[full] h-[500px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)]">
+      <div className="p-[.8rem] w-full h-full flex flex-col gap-4">
+        <Link className="" href={`/blog/${blog.slug}`}>
           {blog?.imageUrl && (
             <Image
               src={blog?.imageUrl}
               alt="blog-img"
               width={350}
               height={350}
-              className="object-cover rounded-[20px] w-full m-[0_auto] "
+              className="object-cover rounded-md w-full"
             />
           )}
         </Link>
-        <div className="flex justify-between items-center">
-          <div className="">
-            <h3 className="text-[28px] font-bold mt-[1.5rem] mb-[1.25rem]">
-              {blog?.title}
-            </h3>
-            <p className="text-[#666]">{blog?.desc}</p>
-            <span className="mt-[2rem] flex items-center gap-[0.5rem] text-[15px]">
-              Created By: <span className="text-[#777]">1st of January</span>{" "}
-            </span>
+
+        <div className="flex flex-col gap-3 h-full px-4">
+          <p className="text-[#6E778B]">{blog?.category}</p>
+
+          <h3 className="text-[20px] font-bold">{blog?.title}</h3>
+
+          <div className="text-[#666] overflow-hidden text-ellipsis  block blog-card">
+            {parse(clean)}
           </div>
-          <div className="text-[24px] cursor-pointer flex items-center gap-[0.5rem]">
-            {blogLikes || 0}{" "}
-            {isLiked ? (
-              <AiFillLike size={20} onClick={handleLike} />
-            ) : (
-              <AiOutlineLike size={20} onClick={handleLike} />
-            )}
+
+          <div className="flex justify-between justify-self-end">
+            <div className="flex gap-3">
+              <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
+                <Image
+                  src={blog?.authorId?.profileImg}
+                  width={45}
+                  height={45}
+                  className="rounded-full"
+                />
+              </div>
+              <div className="flex flex-col justify-center gap-1">
+                <h5 className="font-bold">{blog?.authorId?.username}</h5>
+                <p className="text-[#6E778B] text-[12px]">
+                  {new Date(blog?.createdAt)
+                    .toDateString()
+                    .split(" ")
+                    .slice(1)
+                    .join(" ")}
+                </p>
+              </div>
+            </div>
+
+            <div className="text-[20px] cursor-pointer flex items-center gap-[0.5rem]">
+              {blogLikes || 0}{" "}
+              {isLiked ? (
+                <AiFillLike size={20} onClick={handleLike} />
+              ) : (
+                <AiOutlineLike size={20} onClick={handleLike} />
+              )}
+            </div>
           </div>
         </div>
       </div>

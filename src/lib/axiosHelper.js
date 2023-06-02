@@ -83,11 +83,11 @@ export const getAllBlogs = async () => {
 }
 
 // get a blog
-export const getBlog = async (id) => {
+export const getBlog = async (slug) => {
   try {
     const obj = {
       method: "GET",
-      url: `${blogEp}/${id}`,
+      url: `${blogEp}/${slug}`,
     }
     return await axiosProcessor(obj)
   } catch (error) {
@@ -138,11 +138,11 @@ export const editBlog = async (objData) => {
 }
 
 // delete a blog
-export const deleteBlog = async ({ id, token }) => {
+export const deleteBlog = async ({ slug, token }) => {
   try {
     const obj = {
       method: "DELETE",
-      url: `${blogEp}/${id}`,
+      url: `${blogEp}/${slug}`,
       isPrivate: true,
       token,
     }
@@ -156,13 +156,11 @@ export const deleteBlog = async ({ id, token }) => {
 }
 
 // get comments
-export const getComments = async ({ id, token }) => {
+export const getComments = async ({ slug }) => {
   try {
     const obj = {
       method: "GET",
-      url: `${commentEp}/${id}`,
-      isPrivate: true,
-      token,
+      url: `${commentEp}/blog/${slug}`,
     }
     return await axiosProcessor(obj)
   } catch (error) {

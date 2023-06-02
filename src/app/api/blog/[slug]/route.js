@@ -1,12 +1,14 @@
 import dbConnect from "@/lib/db"
 import { verifyJwtToken } from "@/lib/jwt"
 import Blog from "@/models/Blog"
+import DOMPurify from "isomorphic-dompurify"
 
 export async function GET(req, obj) {
   await dbConnect()
-  const id = obj.params.id
+  const slug = obj.params.slug
+
   try {
-    const blog = await Blog.findById(id)
+    const blog = await Blog.findOne({ slug })
       .populate("authorId")
       .select("-password")
 
@@ -20,7 +22,7 @@ export async function GET(req, obj) {
 
 export async function PUT(req, obj) {
   await dbConnect()
-  const id = obj.params.id
+  const slug = obj.params.slug
 
   const accessToken = req.headers.get("authorization")
 
@@ -35,8 +37,10 @@ export async function PUT(req, obj) {
 
   try {
     const body = await req.json()
+    const { cleanContent, ...rest } = body
+    const content = DOMPurify.sanitize(cleanContent)
 
-    const blog = await Blog.findById(id).populate("authorId")
+    const blog = await Blog.finOne({ slug }).populate("authorId")
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
@@ -49,8 +53,8 @@ export async function PUT(req, obj) {
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
-      id,
-      { $set: { ...body } },
+      blog?._id,
+      { $set: { ...rest, content } },
       { new: true }
     )
 
@@ -72,7 +76,7 @@ export async function PUT(req, obj) {
 
 export async function DELETE(req, obj) {
   await dbConnect()
-  const id = obj.params.id
+  const slug = obj.params.slug
   const accessToken = req.headers.get("authorization")
 
   const decodedToken = verifyJwtToken(accessToken)
@@ -85,7 +89,7 @@ export async function DELETE(req, obj) {
   }
 
   try {
-    const blog = await Blog.findById(id).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate("authorId")
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
@@ -94,7 +98,7 @@ export async function DELETE(req, obj) {
       )
     }
 
-    await Blog.findByIdAndDelete(id)
+    await Blog.findOneAndDelete({ slug })
     return new Response(
       JSON.stringify({
         status: "success",

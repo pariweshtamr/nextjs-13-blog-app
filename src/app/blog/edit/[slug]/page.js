@@ -1,29 +1,39 @@
 "use client"
-import { createPost } from "@/lib/axiosHelper"
+import {
+  editBlogAction,
+  getSingleBlogAction,
+} from "@/app/redux/blog/blogAction"
 import axios from "axios"
 import DOMPurify from "dompurify"
 import JoditEditor from "jodit-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BsFillPlusCircleFill } from "react-icons/bs"
+import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 
-const CreateBlog = () => {
+const EditBlog = (obj) => {
+  const dispatch = useDispatch()
   const [title, setTitle] = useState("")
+  const [desc, setDesc] = useState("")
+  const [content, setContent] = useState("")
   const [category, setCategory] = useState("Nature")
+  const [img, setImg] = useState("")
   const [photo, setPhoto] = useState("")
   const editor = useRef(null)
   const { data: session, status } = useSession()
+  const { selectedBlog } = useSelector((state) => state.blog)
   const router = useRouter()
-  const cloudName = "ddbttkmhz"
-  const uploadPreset = "next_blog"
 
   const config = {
     readonly: false,
     placeholder: "Start typing...",
   }
+
+  const cloudName = "ddbttkmhz"
+  const uploadPreset = "next_blog"
 
   const uploadImage = async () => {
     if (!photo) return
@@ -48,41 +58,48 @@ const CreateBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const dirtyHtml = editor?.current?.value
-    const cleanContent = DOMPurify.sanitize(dirtyHtml)
 
-    let imageUrl
-    if (!imageUrl) {
-      imageUrl = await uploadImage()
-    }
-
-    if (title.trim() === "") {
-      return toast.warning("Title is required!")
-    }
-    if (!category) {
-      return toast.warning("Please select a category for the post!")
+    if (!title || !category) {
+      return toast.error("All fields are required!")
     }
 
     try {
-      const { status, message, blog } = await createPost({
-        title,
-        imageUrl,
-        category,
-        cleanContent,
-        authorId: session?.user?._id,
-        token: session.user.accessToken,
-      })
-
-      if (status !== "success") {
-        return toast[status](message)
+      let imageUrl = null
+      if (photo) {
+        imageUrl = await uploadImage()
       }
+      const dirtyHtml = editor?.current?.value
+      const cleanContent = DOMPurify.sanitize(dirtyHtml)
 
-      toast[status](message) && router.push(`/blog/${blog?._id}`)
+      dispatch(
+        editBlogAction({
+          id: obj.params.id,
+          token: session?.user?.accessToken,
+          title,
+          desc,
+          cleanContent,
+          category,
+          imageUrl: photo ? imageUrl : img,
+        })
+      )
+
+      router.push(`/blog/${selectedBlog?._id}`)
     } catch (error) {
       console.log(error)
-      toast.error(error.message)
     }
   }
+
+  useEffect(() => {
+    !selectedBlog && dispatch(getSingleBlogAction(obj.params.id))
+
+    if (selectedBlog) {
+      setTitle(selectedBlog.title)
+      setDesc(selectedBlog.desc)
+      setCategory(selectedBlog.category)
+      setImg(selectedBlog.imageUrl)
+      setContent(selectedBlog.content)
+    }
+  }, [dispatch, obj.params.id])
 
   if (status === "loading") {
     return <p>Loading...</p>
@@ -93,19 +110,30 @@ const CreateBlog = () => {
       </p>
     )
   }
+
   return (
     <div className="mt-[5rem] h-[calc(100ch - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
-        <h2 className="text-[32px] text-[#222] tracking-[1px]">Create Post</h2>
+        <h2 className="text-[32px] text-[#222] tracking-[1px]">Edit Post</h2>
         <div>
-          {photo && (
+          {photo ? (
             <Image
               src={URL.createObjectURL(photo)}
               alt="post-img"
               width={2100}
               height={2100}
-              className="w-1/2 h-1/2 m-[0_auto] mt-[2rem]"
+              className="w-full h-full m-[0_auto] mt-[2rem]"
             />
+          ) : img ? (
+            <Image
+              src={img}
+              alt="post-img"
+              width={2100}
+              height={2100}
+              className="w-full h-full m-[0_auto] mt-[2rem]"
+            />
+          ) : (
+            ""
           )}
         </div>
 
@@ -124,13 +152,14 @@ const CreateBlog = () => {
               type="text"
               placeholder="Title..."
               onChange={(e) => setTitle(e.target.value)}
+              value={title}
               required
               className="flex-1 text-[24px] border-b border-b-solid border-b-[#666] bg-transparent outline-none placeholder:tracking-[2px]"
             />
 
             <select
               onChange={(e) => setCategory(e.target.value)}
-              defaultValue={0}
+              value={category}
               className="p-[.7rem_1rem] outline-none cursor-pointer appearance-none border border-solid border-[#666] resize-none rounded-[6px]"
             >
               <option value={0} disabled>
@@ -152,10 +181,10 @@ const CreateBlog = () => {
               Publish
             </button>
           </div>
-          <JoditEditor ref={editor} config={config} required />
+          <JoditEditor ref={editor} value={content} config={config} required />
         </form>
       </div>
     </div>
   )
 }
-export default CreateBlog
+export default EditBlog

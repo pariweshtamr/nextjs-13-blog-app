@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { BsTrash } from "react-icons/bs"
 import { format } from "timeago.js"
-import person from "../../../public/devbw.png"
 import { toast } from "react-toastify"
 
 const Comment = ({ comment, setComments }) => {
@@ -32,11 +31,11 @@ const Comment = ({ comment, setComments }) => {
       <div className="w-[85%] h-full m-[0_auto] flex justify-between items-center">
         <div className="flex gap-[1.25rem]">
           <Image
-            src={person}
-            width={45}
-            height={45}
+            src={session?.user?.profileImg}
+            width={50}
+            height={50}
             alt="profile-pic"
-            className="w-[40px] h-[40px] object-cover rounded-1/2"
+            className="w-[50px] h-[50px] object-cover rounded-full self-center"
           />
           <div className="flex flex-col items-start gap-[.25rem]">
             <h4 className="">{comment?.authorId?.username}</h4>
@@ -47,7 +46,7 @@ const Comment = ({ comment, setComments }) => {
           <span>{comment?.text}</span>
         </div>
 
-        <div className="">
+        <div>
           {session?.user?._id === comment?.authorId?._id && (
             <BsTrash className="cursor-pointer" onClick={handleDeleteComment} />
           )}
