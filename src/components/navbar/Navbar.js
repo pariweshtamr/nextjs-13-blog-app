@@ -5,6 +5,7 @@ import { useState } from "react"
 import { AiOutlineClose } from "react-icons/ai"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
+import logo from "/public/logo.png"
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -29,7 +30,9 @@ const Navbar = () => {
     >
       <div className="w-[85%] m-[0 auto] flex justify-between items-center relative">
         <h2 className="text-4xl text-[#d14201]">
-          <Link href="/">Blog App</Link>
+          <Link href="/">
+            <Image src={logo} alt="logo" width={130} height={500} />
+          </Link>
         </h2>
         <ul className="flex items-center gap-[1.25rem]">
           {session?.user ? (

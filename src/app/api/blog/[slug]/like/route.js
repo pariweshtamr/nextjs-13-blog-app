@@ -11,8 +11,10 @@ export async function PUT(req, obj) {
 
   if (!accessToken || !decodedToken) {
     return new Response(
-      JSON.stringify({ error: "Unauthorized! wrong or expired token" }),
-      { status: 403 }
+      JSON.stringify({
+        status: "Unauthorized",
+        message: "Please login to like or dislike the blog post!",
+      })
     )
   }
   try {

@@ -19,6 +19,7 @@ import parse from "html-react-parser"
 import { useDispatch, useSelector } from "react-redux"
 import { getSingleBlogAction } from "@/app/redux/blog/blogAction"
 import DOMPurify from "dompurify"
+import avatar from "/public/avatar.jpg"
 
 const BlogDetails = (obj) => {
   const dispatch = useDispatch()
@@ -31,7 +32,8 @@ const BlogDetails = (obj) => {
   const { data: session } = useSession()
   const router = useRouter()
 
-  const handleComment = async () => {
+  const handleComment = async (e) => {
+    e.preventDefault()
     if (commentText?.length < 2) {
       return toast.error("Comment must be more than 5 characters long!")
     }
@@ -88,12 +90,15 @@ const BlogDetails = (obj) => {
 
   const handleLike = async () => {
     try {
-      const { status } = await toggleLike({
+      const { status, message } = await toggleLike({
         slug: post.slug,
         token: session?.user?.accessToken,
       })
 
-      console.log(status)
+      if (status === "Unauthorized") {
+        toast.error(message)
+        return
+      }
 
       if (status === "success") {
         if (isLiked) {
@@ -145,18 +150,30 @@ const BlogDetails = (obj) => {
             className="object-cover mb-[2.5rem] w-full m-[0_auto]"
           />
         </div>
-        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[2rem]">
-          <h3 className="text-[36px] text-[#333] font-bold capitalize">
+        <div className="p-[0_1rem] w-[800px] flex justify-between items-start mb-[2rem]">
+          <h3 className="text-[36px] text-[#333] font-bold capitalize flex flex-col gap-4">
             {selectedBlog?.title}
-            <p className="font-bold text-[14px] text-[#666]">
-              Published:{" "}
-              <span className="font-[500] text-[#666] text-[14px]">
-                {format(selectedBlog?.createdAt)}
-              </span>
-            </p>
+            <div className="flex gap-2">
+              {selectedBlog?.authorId?._id !== session?.user?._id && (
+                <>
+                  <p className="flex items-center gap-1 text-[14px] text-[#333]">
+                    Written by:{" "}
+                    <span className="font-[500] text-[#666] text-[14px]">
+                      {selectedBlog?.authorId?.username}
+                    </span>
+                  </p>
+                  <p className="font-bold text-[14px] text-[#333]">|</p>
+                </>
+              )}
+              <p className="font-bold text-[14px] text-[#666]">
+                <span className="font-[500] text-[#666] text-[14px]">
+                  {format(selectedBlog?.createdAt)}
+                </span>
+              </p>
+            </div>
           </h3>
-          {selectedBlog?.authorId?._id === session?.user?._id ? (
-            <div className="flex items-start h-full gap-5">
+          {selectedBlog?.authorId?._id === session?.user?._id && (
+            <div className="flex mt-3.5 h-full gap-5">
               <Link
                 className="flex items-center outline-none border border-solid border-transparent text-[#000] cursor-pointer text-[18px] font-bold hover:text-[#3eda22]"
                 href={`/blog/edit/${obj.params.slug}`}
@@ -170,17 +187,13 @@ const BlogDetails = (obj) => {
                 <AiFillDelete size={24} />
               </button>
             </div>
-          ) : (
-            <div className="flex items-center gap-[.75rem] text-[20px] text-[#444]">
-              Author: <span>{selectedBlog?.authorId?.username}</span>
-            </div>
           )}
         </div>
 
         <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
           <div className="flex justify-start items-center gap-[1.25rem] text-[18px] font-bold">
             Category:{" "}
-            <span className="p-[0.5rem_1.25rem] bg-[#000] text-white rounded-full text-[16px] font-[500]">
+            <span className="p-[0.3rem_1rem] bg-[#000] text-white rounded-full text-[16px] font-[500]">
               {selectedBlog?.category}
             </span>
           </div>
@@ -199,9 +212,12 @@ const BlogDetails = (obj) => {
         </div>
 
         <div className="m-[0_auto] mt-[5rem] w-[800px] flex flex-col justify-center items-center border border-solid border-[#555] rounded-[20px]">
-          <div className="p-[1rem] w-full flex items-center gap-[1.5rem] border-b border-b-solid border-b-[#555]">
+          <form
+            onSubmit={handleComment}
+            className="p-[1rem] w-full flex items-center gap-[1.5rem] border-b border-b-solid border-b-[#555]"
+          >
             <Image
-              src={session?.user?.profileImg}
+              src={session ? session?.user?.profileImg : avatar}
               width={50}
               height={50}
               alt="random-person"
@@ -215,12 +231,12 @@ const BlogDetails = (obj) => {
               className="flex-1 outline-none p-[0.25rem] border-b border-b-solid border-b-[#555]"
             />
             <button
-              onClick={handleComment}
-              className="outline-none border-none bg-[#0707b5] text-white p-[0.25rem_0.75rem] rounded-[8px] text-[17px] cursor-pointer"
+              type="submit"
+              className="outline-none border-none bg-[#d14201] text-white p-[0.25rem_0.75rem] rounded-[8px] text-[17px] cursor-pointer"
             >
               Post
             </button>
-          </div>
+          </form>
           <div className="max-h-[300px] overflow-auto mt-[1.25rem] w-full p-[1rem] flex flex-col items-center gap-[2rem]">
             {!comments?.length ? (
               <h4 className="p-[1.25rem] text-[24px] text-[#222]">
