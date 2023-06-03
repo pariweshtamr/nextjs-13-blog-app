@@ -4,7 +4,7 @@ import Blog from "@/models/Blog"
 
 export async function PUT(req, obj) {
   await dbConnect()
-  const id = obj.params.id
+  const slug = obj.params.slug
   const accessToken = req.headers.get("authorization")
 
   const decodedToken = verifyJwtToken(accessToken)
@@ -16,7 +16,7 @@ export async function PUT(req, obj) {
     )
   }
   try {
-    const blog = await Blog.findById(id)
+    const blog = await Blog.findOne({ slug })
 
     if (blog?.likes?.includes(decodedToken._id)) {
       blog.likes = blog?.likes?.filter(

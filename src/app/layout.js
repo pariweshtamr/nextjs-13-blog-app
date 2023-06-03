@@ -13,7 +13,7 @@ export const metadata = {
 
 export default function RootLayout({ children, session }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body className={`${inter.className} min-h-[100vh] flex flex-col`}>
         <Providers>
           <Navbar />

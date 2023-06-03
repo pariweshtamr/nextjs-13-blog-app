@@ -9,9 +9,9 @@ export async function GET(req) {
 
   try {
     const blogs = await Blog.find({}).limit(16).populate("authorId")
-    return new Response(JSON.stringify({ status: "success", blogs }), {
-      status: 200,
-    })
+    return new Response(
+      JSON.stringify({ count: blogs.length, status: "success", blogs })
+    )
   } catch (error) {
     return new Response(
       JSON.stringify({ status: "error", message: error.message }),

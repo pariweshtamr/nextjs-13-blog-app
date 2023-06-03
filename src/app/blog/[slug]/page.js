@@ -93,6 +93,8 @@ const BlogDetails = (obj) => {
         token: session?.user?.accessToken,
       })
 
+      console.log(status)
+
       if (status === "success") {
         if (isLiked) {
           setIsLiked((prev) => !prev)
@@ -134,15 +136,17 @@ const BlogDetails = (obj) => {
   return (
     <div className="min-h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
-        <Image
-          src={selectedBlog?.imageUrl}
-          alt="post-img"
-          width={800}
-          height={650}
-          className="object-cover mb-[2.5rem]"
-        />
-        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
-          <h3 className="text-[36px] text-[#333] capitalize">
+        <div className="w-[800px] h-auto">
+          <Image
+            src={selectedBlog?.imageUrl}
+            alt="post-img"
+            width={800}
+            height={650}
+            className="object-cover mb-[2.5rem] w-full m-[0_auto]"
+          />
+        </div>
+        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[2rem]">
+          <h3 className="text-[36px] text-[#333] font-bold capitalize">
             {selectedBlog?.title}
             <p className="font-bold text-[14px] text-[#666]">
               Published:{" "}
@@ -152,18 +156,18 @@ const BlogDetails = (obj) => {
             </p>
           </h3>
           {selectedBlog?.authorId?._id === session?.user?._id ? (
-            <div className="flex items-center gap-[1rem]">
+            <div className="flex items-start h-full gap-5">
               <Link
-                className="flex items-center gap-[.75rem] outline-none border border-solid border-transparent bg-[#3eda22] text-[#fff] p-[0.5rem_1.25rem] rounded-[12px] cursor-pointer text-[18px] font-bold transition-[150ms] hover:bg-[#fff] hover:border-[#3eda22] hover:text-[#3eda22]"
+                className="flex items-center outline-none border border-solid border-transparent text-[#000] cursor-pointer text-[18px] font-bold hover:text-[#3eda22]"
                 href={`/blog/edit/${obj.params.slug}`}
               >
-                Edit <BsFillPencilFill />
+                <BsFillPencilFill size={24} />
               </Link>
               <button
-                className="outline-none border border-solid border-transparent bg-[#f00] text-[#fff] p-[.5rem_1.25rem] flex gap-[.75rem] items-center rounded-[12px] cursor-pointer text-[18px] font-bold transition-[150ms] hover:bg-[#fff] hover:border-[#f00] hover:text-[#f00]"
+                className="outline-none border border-solid border-transparent text-[#000] flex items-center  cursor-pointer text-[18px] font-bold hover:text-[#f00]"
                 onClick={handleDelete}
               >
-                Delete <AiFillDelete />
+                <AiFillDelete size={24} />
               </button>
             </div>
           ) : (
@@ -176,7 +180,7 @@ const BlogDetails = (obj) => {
         <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
           <div className="flex justify-start items-center gap-[1.25rem] text-[18px] font-bold">
             Category:{" "}
-            <span className="p-[0.5rem_1.25rem] bg-[#3eda22] text-white rounded-[12px] text-[16px] font-[500]">
+            <span className="p-[0.5rem_1.25rem] bg-[#000] text-white rounded-full text-[16px] font-[500]">
               {selectedBlog?.category}
             </span>
           </div>

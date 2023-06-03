@@ -17,7 +17,6 @@ import { toast } from "react-toastify"
 const EditBlog = (obj) => {
   const dispatch = useDispatch()
   const [title, setTitle] = useState("")
-  const [desc, setDesc] = useState("")
   const [content, setContent] = useState("")
   const [category, setCategory] = useState("Nature")
   const [img, setImg] = useState("")
@@ -73,33 +72,31 @@ const EditBlog = (obj) => {
 
       dispatch(
         editBlogAction({
-          id: obj.params.id,
+          slug: obj.params.slug,
           token: session?.user?.accessToken,
           title,
-          desc,
           cleanContent,
           category,
           imageUrl: photo ? imageUrl : img,
         })
       )
 
-      router.push(`/blog/${selectedBlog?._id}`)
+      router.push(`/blog/${selectedBlog?.slug}`)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    !selectedBlog && dispatch(getSingleBlogAction(obj.params.id))
+    !selectedBlog && dispatch(getSingleBlogAction(obj.params.slug))
 
     if (selectedBlog) {
       setTitle(selectedBlog.title)
-      setDesc(selectedBlog.desc)
       setCategory(selectedBlog.category)
       setImg(selectedBlog.imageUrl)
       setContent(selectedBlog.content)
     }
-  }, [dispatch, obj.params.id])
+  }, [dispatch, obj.params.slug])
 
   if (status === "loading") {
     return <p>Loading...</p>
@@ -113,31 +110,35 @@ const EditBlog = (obj) => {
 
   return (
     <div className="mt-[5rem] h-[calc(100ch - 60px)] w-full">
-      <div className="w-[85%] m-[0_auto] flex flex-col items-center">
+      <div className="w-[70%] m-[0_auto] flex flex-col items-center">
         <h2 className="text-[32px] text-[#222] tracking-[1px]">Edit Post</h2>
         <div>
           {photo ? (
-            <Image
-              src={URL.createObjectURL(photo)}
-              alt="post-img"
-              width={2100}
-              height={2100}
-              className="w-full h-full m-[0_auto] mt-[2rem]"
-            />
+            <div className="w-full m-[0_auto]">
+              <Image
+                src={URL.createObjectURL(photo)}
+                alt="post-img"
+                width={500}
+                height={500}
+                className="w-full h-full m-[0_auto] mt-[2rem]"
+              />
+            </div>
           ) : img ? (
-            <Image
-              src={img}
-              alt="post-img"
-              width={2100}
-              height={2100}
-              className="w-full h-full m-[0_auto] mt-[2rem]"
-            />
+            <div className="w-full m-[0_auto]">
+              <Image
+                src={img}
+                alt="post-img"
+                width={2100}
+                height={2100}
+                className="w-full h-full m-[0_auto] mt-[2rem]"
+              />
+            </div>
           ) : (
             ""
           )}
         </div>
 
-        <form className="mt-[2rem] w-[100%]" onSubmit={handleSubmit}>
+        <form className="mt-[2rem] w-full" onSubmit={handleSubmit}>
           <div className="flex items-center py-2 pb-[3rem] gap-5">
             <label htmlFor="image">
               <BsFillPlusCircleFill className="text-[2rem] text-[#666] cursor-pointer" />

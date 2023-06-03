@@ -67,11 +67,26 @@ export const createPost = async (objData) => {
 }
 
 // get all blogs
-export const getAllBlogs = async () => {
+export const getAllBlogs = async (page) => {
   try {
     const obj = {
       method: "GET",
-      url: blogEp,
+      url: `${blogEp}?page=${page}`,
+    }
+    return await axiosProcessor(obj)
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    }
+  }
+}
+
+export const getBlogCount = async () => {
+  try {
+    const obj = {
+      method: "GET",
+      url: blogEp + "/count",
     }
     return await axiosProcessor(obj)
   } catch (error) {
@@ -100,11 +115,11 @@ export const getBlog = async (slug) => {
 
 // like or unlike a blog
 export const toggleLike = async (objData) => {
-  const { id, token } = objData
+  const { slug, token } = objData
   try {
     const obj = {
       method: "PUT",
-      url: `${blogEp}/${id}/like`,
+      url: `${blogEp}/${slug}/like`,
       isPrivate: true,
       token,
     }
@@ -119,11 +134,11 @@ export const toggleLike = async (objData) => {
 
 // edit blog
 export const editBlog = async (objData) => {
-  const { id, token, ...rest } = objData
+  const { slug, token, ...rest } = objData
   try {
     const obj = {
       method: "PUT",
-      url: `${blogEp}/${id}`,
+      url: `${blogEp}/${slug}`,
       objData: rest,
       isPrivate: true,
       token,

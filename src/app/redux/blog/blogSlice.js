@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
   blogs: [],
+  blogCount: 0,
   isLoading: false,
   selectedBlog: {},
 }
@@ -21,12 +22,20 @@ const blogSlice = createSlice({
       state.isLoading = false
       state.selectedBlog = payload || {}
     },
+    getCount: (state, { payload }) => {
+      state.isLoading = false
+      state.blogCount = payload
+    },
   },
 })
 
 const { actions, reducer } = blogSlice
 
-export const { requestPending, getBlogsSuccess, getSelectedBlogSuccess } =
-  actions
+export const {
+  requestPending,
+  getBlogsSuccess,
+  getSelectedBlogSuccess,
+  getCount,
+} = actions
 
 export default reducer

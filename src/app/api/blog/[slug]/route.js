@@ -40,7 +40,7 @@ export async function PUT(req, obj) {
     const { cleanContent, ...rest } = body
     const content = DOMPurify.sanitize(cleanContent)
 
-    const blog = await Blog.finOne({ slug }).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate("authorId")
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(

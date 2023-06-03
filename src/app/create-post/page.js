@@ -77,7 +77,7 @@ const CreateBlog = () => {
         return toast[status](message)
       }
 
-      toast[status](message) && router.push(`/blog/${blog?._id}`)
+      toast[status](message) && router.push(`/blog/${blog?.slug}`)
     } catch (error) {
       console.log(error)
       toast.error(error.message)
