@@ -28,18 +28,18 @@ const Comment = ({ comment, setComments }) => {
 
   return (
     <div className="h-full w-full">
-      <div className="w-[85%] h-full m-[0_auto] flex justify-between items-center">
+      <div className="w-[85%] sm:w-full h-full m-[0_auto] flex justify-between items-center">
         <div className="flex gap-[1.25rem]">
           <Image
             src={session?.user?.profileImg}
             width={50}
             height={50}
             alt="profile-pic"
-            className="w-[50px] h-[50px] object-cover rounded-full self-center"
+            className="w-[50px] h-[50px] object-cover rounded-full self-center sm:hidden"
           />
           <div className="flex flex-col items-start gap-[.25rem]">
-            <h4 className="">{comment?.authorId?.username}</h4>
-            <span className="text-[15px] text-[#555]">
+            <h4 className="sm:text-[12px]">{comment?.authorId?.username}</h4>
+            <span className="text-[15px] text-[#555] sm:text-[10px]">
               {format(comment?.createdAt)}
             </span>
           </div>

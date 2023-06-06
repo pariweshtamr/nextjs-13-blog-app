@@ -59,16 +59,16 @@ const Navbar = () => {
               )}
 
               {showDropdown && (
-                <div className="absolute w-[12%] bg-[#efefef] p-[1rem] flex flex-col justify-center items-center gap-[1rem] top-[3.5rem] right-[-3.5rem] rounded-[8px]">
-                  <div className="w-[20px] h-[20px] bg-[#efefef] absolute top-[-3px] rotate-45"></div>
+                <div className="absolute w-[12%] bg-[#efefef] p-[1rem] flex flex-col justify-center items-center gap-[1rem] top-[5rem] right-[-3.5rem] rounded-[8px] sm:right-0 sm:top-[4.3rem] xl:w-max xl:right-[-2.4rem]">
+                  <div className="w-[20px] h-[20px] bg-[#efefef] absolute top-[-3px] rotate-45 sm:right-3"></div>
                   <AiOutlineClose
-                    className="absolute top-[0.3rem] right-[0.3rem] cursor-pointer hover:bg-black hover:text-white hover:rounded-[50%]"
+                    className="absolute top-[0.3rem] right-[0.3rem] cursor-pointer hover:bg-black hover:text-white hover:rounded-[50%] sm:text-xs"
                     onClick={handleHideDropdown}
                   />
                   <Link
                     onClick={handleHideDropdown}
                     href="/create-post"
-                    className="text-[#444] text-[18px] font-[300] mt-[1rem] hover:text-[#d14201]"
+                    className="text-[#444] text-[18px] font-[300] mt-[1rem] hover:text-[#d14201] sm:text-sm"
                   >
                     Create
                   </Link>
@@ -78,7 +78,7 @@ const Navbar = () => {
                       signOut()
                       handleHideDropdown()
                     }}
-                    className="p-[0.4rem_1rem] border-none text-white rounded-[6px] font-bold text-[17px] bg-[#d14201]"
+                    className="p-[0.4rem_1rem] border-none text-white rounded-[6px] font-bold text-[17px] bg-[#d14201] sm:text-sm sm:p-[.2rem_.8rem]"
                   >
                     Logout
                   </button>

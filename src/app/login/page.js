@@ -57,7 +57,7 @@ const Login = () => {
         </p>
         <form
           onSubmit={handleSubmit}
-          className="mt-[2rem] w-[25%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem]"
+          className="mt-[2rem] w-[25%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem] sm:w-[100%] lg:w-[60%]"
         >
           <input
             type="email"

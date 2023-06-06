@@ -140,8 +140,8 @@ const BlogDetails = (obj) => {
 
   return (
     <div className="min-h-[calc(100vh - 60px)] w-full">
-      <div className="w-[85%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
-        <div className="w-[800px] h-auto">
+      <div className="w-[85%] sm:w-[90%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
+        <div className="w-[800px] h-auto lg:w-full">
           <Image
             src={selectedBlog?.imageUrl}
             alt="post-img"
@@ -150,8 +150,8 @@ const BlogDetails = (obj) => {
             className="object-cover mb-[2.5rem] w-full m-[0_auto]"
           />
         </div>
-        <div className="p-[0_1rem] w-[800px] flex justify-between items-start mb-[2rem]">
-          <h3 className="text-[36px] text-[#333] font-bold capitalize flex flex-col gap-4">
+        <div className="p-[0_1rem] w-[800px] flex justify-between items-start mb-[2rem] lg:w-full">
+          <h3 className="text-[36px] sm:text-[20px] md:text-[26px] lg:text-[32px] text-[#333] font-bold capitalize flex flex-col gap-4">
             {selectedBlog?.title}
             <div className="flex gap-2">
               {selectedBlog?.authorId?._id !== session?.user?._id && (
@@ -173,27 +173,27 @@ const BlogDetails = (obj) => {
             </div>
           </h3>
           {selectedBlog?.authorId?._id === session?.user?._id && (
-            <div className="flex mt-3.5 h-full gap-5">
+            <div className="flex mt-3.5 h-full gap-5 sm:gap-3">
               <Link
                 className="flex items-center outline-none border border-solid border-transparent text-[#000] cursor-pointer text-[18px] font-bold hover:text-[#3eda22]"
                 href={`/blog/edit/${obj.params.slug}`}
               >
-                <BsFillPencilFill size={24} />
+                <BsFillPencilFill className="text-[1.5rem] lg:text-xl md:text-sm" />
               </Link>
               <button
                 className="outline-none border border-solid border-transparent text-[#000] flex items-center  cursor-pointer text-[18px] font-bold hover:text-[#f00]"
                 onClick={handleDelete}
               >
-                <AiFillDelete size={24} />
+                <AiFillDelete className="text-[1.5rem] lg:text-xl md:text-sm" />
               </button>
             </div>
           )}
         </div>
 
-        <div className="p-[0_1rem] w-[800px] flex justify-between items-center mb-[3.75rem]">
-          <div className="flex justify-start items-center gap-[1.25rem] text-[18px] font-bold">
+        <div className="p-[0_1rem] w-[800px] lg:w-full flex justify-between items-center mb-[3.75rem]">
+          <div className="flex justify-start items-center gap-[1.25rem] text-[18px] sm:text-[16px] font-bold">
             Category:{" "}
-            <span className="p-[0.3rem_1rem] bg-[#000] text-white rounded-full text-[16px] font-[500]">
+            <span className="p-[0.3rem_1rem] sm:p-[.2rem_.8rem] bg-[#000] text-white rounded-full text-[16px] font-[500] sm:text-[12px]">
               {selectedBlog?.category}
             </span>
           </div>
@@ -207,11 +207,11 @@ const BlogDetails = (obj) => {
           </div>
         </div>
 
-        <div className="p-[0_1rem] w-[800px] mb-[3.75rem]">
+        <div className="p-[0_1rem] w-[800px] mb-[3.75rem] lg:w-full">
           <div className="">{parse(clean)}</div>
         </div>
 
-        <div className="m-[0_auto] mt-[5rem] w-[800px] flex flex-col justify-center items-center border border-solid border-[#555] rounded-[20px]">
+        <div className="m-[0_auto] mt-[5rem] w-[800px] lg:w-full flex flex-col justify-center items-center border border-solid border-[#555] rounded-[20px]">
           <form
             onSubmit={handleComment}
             className="p-[1rem] w-full flex items-center gap-[1.5rem] border-b border-b-solid border-b-[#555]"
@@ -221,7 +221,7 @@ const BlogDetails = (obj) => {
               width={50}
               height={50}
               alt="random-person"
-              className="object-cover rounded-full"
+              className="object-cover rounded-full sm:hidden"
             />
             <input
               type="text"
@@ -239,7 +239,7 @@ const BlogDetails = (obj) => {
           </form>
           <div className="max-h-[300px] overflow-auto mt-[1.25rem] w-full p-[1rem] flex flex-col items-center gap-[2rem]">
             {!comments?.length ? (
-              <h4 className="p-[1.25rem] text-[24px] text-[#222]">
+              <h4 className="p-[1.25rem] sm:p-[1rem] text-[24px] sm:text-lg text-[#222]">
                 No comments. Be the first one to leave a comment!
               </h4>
             ) : (
