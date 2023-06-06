@@ -45,16 +45,16 @@ const Home = () => {
       ) : (
         <>
           <div className="flex flex-col bg-[#FCF6ED] bg-[url('https://www.transparenttextures.com/patterns/xv.png')] bg relative">
-            <div className="absolute z-[0] -left-[22rem] top-[4.5rem] w-[65%] h-[65%] bg-white border-2 border-solid border-[#000] rounded-full rotate-[22deg]"></div>
+            <div className="absolute z-[0] -left-[22rem] top-[4.5rem] w-[65%] h-[65%] bg-white border-2 border-solid border-[#000] rounded-full rotate-[22deg] sm:hidden"></div>
             <p className="text-center mt-[1rem]">Blogs</p>
-            <h1 className="text-center text-[#333] text-[3.5rem] font-bold">
+            <h1 className="text-center text-[#333] text-[3.5rem] sm:text-[2rem] font-bold">
               Stories & ideas
             </h1>
-            <p className="text-[#6E778B] text-center">
+            <p className="text-[#6E778B] text-center sm:text-xs">
               The latest news about the tech world.
             </p>
-            <div className="flex gap-2.5 w-[70%] m-[0_auto] my-[2.5rem] mb-[5rem] min-h-[60vh] z-10">
-              <div className="w-1/2 h-full">
+            <div className="flex gap-2.5 w-[70%] m-[0_auto] my-[2.5rem] mb-[5rem] min-h-[60vh] z-10 md:flex-col md:w-full sm:px-[1.5rem] md:px-[5rem]">
+              <div className="w-1/2 h-full md:w-full">
                 {sortedPosts?.length &&
                   sortedPosts.slice(0, 1).map((post) => (
                     <div
@@ -72,12 +72,12 @@ const Home = () => {
                           />
                         )}
                       </Link>
-                      <div className="flex-1 px-5 pb-4 pt-6 flex flex-col justify-between">
+                      <div className="flex-1 px-5 pb-4 pt-6 flex flex-col justify-between lg:gap-4">
                         <div className="bg-[#000] text-white w-max px-3 py-1 rounded-full text-sm">
                           {post.category}
                         </div>
 
-                        <h3 className="font-bold text-[1D2031] text-[2rem]">
+                        <h3 className="font-bold text-[1D2031] text-[2rem] lg:text-xl">
                           {post.title}
                         </h3>
 
@@ -109,7 +109,7 @@ const Home = () => {
                   ))}
               </div>
 
-              <div className="w-1/2 min-h-[60vh] flex flex-col justify-around">
+              <div className="w-1/2 min-h-[60vh] flex flex-col justify-around md:w-full">
                 {sortedPosts?.length &&
                   sortedPosts?.slice(1, 4).map((post) => (
                     <div className="flex flex-col p-3" key={post._id}>
@@ -126,15 +126,15 @@ const Home = () => {
                           )}
                         </Link>
 
-                        <div className="flex flex-col justify-between flex-1 py-1">
-                          <div className="bg-[#000] text-white w-max px-2.5 py-1 rounded-full text-xs">
+                        <div className="flex flex-col justify-between flex-1 py-1 lg:gap-1.5">
+                          <div className="bg-[#000] text-white w-max px-2.5 py-1 rounded-full text-xs sm:text-[.6rem] sm:px-2">
                             {post.category}
                           </div>
-                          <h3 className="font-bold text-[1D2031] text-[1.1rem]">
+                          <h3 className="font-bold text-[1D2031] text-[1.1rem] sm:text-xs lg:text-sm">
                             {post.title}
                           </h3>
 
-                          <div className="flex gap-3">
+                          <div className="flex gap-3 sm:gap-2">
                             <div className="rounded-full border border-solid border-[#333] p-[2px] w-max h-max">
                               <Image
                                 src={post.authorId.profileImg}
@@ -145,10 +145,10 @@ const Home = () => {
                               />
                             </div>
                             <div className="flex flex-col justify-center gap-1">
-                              <h5 className="font-bold text-[14px]">
+                              <h5 className="font-bold text-[14px] sm:text-xs">
                                 {post.authorId.username}
                               </h5>
-                              <p className="text-[12px] text-[#6E778B]">
+                              <p className="text-[12px] text-[#6E778B] sm:text-[.6rem]">
                                 {new Date(post.createdAt)
                                   .toDateString()
                                   .split(" ")
@@ -167,7 +167,7 @@ const Home = () => {
 
           <div className="h-full w-[85%] m-[0_auto] mt-[2.5rem]">
             <p className="font-bold text-lg">All blog posts</p>
-            <div className=" w-full mt-[2.5rem] grid grid-cols-3 gap-8">
+            <div className=" w-full mt-[2.5rem] grid grid-cols-3 gap-8 sm:grid-cols-1 lg:grid-cols-2">
               {paginatedPosts?.length ? (
                 paginatedPosts?.map((blog) => (
                   <BlogCard key={blog._id} blog={blog} />

@@ -13,8 +13,8 @@ const Pagination = ({ items, currentPage, pageSize, onPageChange }) => {
             key={page}
             className={
               page === currentPage
-                ? "flex justify-center items-center w-[2rem] h-[2rem] border border-solid border-black rounded-full cursor-pointer bg-[#d14201] text-white"
-                : "flex justify-center items-center w-[2rem] h-[2rem] border border-solid border-[#d14201] rounded-full cursor-pointer "
+                ? "flex justify-center items-center w-[2rem] sm:w-[1.5rem] h-[2rem] sm:h-[1.5rem] sm:text-xs border border-solid border-black rounded-full cursor-pointer bg-[#d14201] text-white"
+                : "flex justify-center items-center w-[2rem] sm:w-[1.5rem] h-[2rem] sm:h-[1.5rem] sm:text-xs border border-solid border-[#d14201] rounded-full cursor-pointer "
             }
             onClick={() => onPageChange(page)}
           >

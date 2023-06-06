@@ -46,7 +46,7 @@ const BlogCard = ({ blog }) => {
   }, [blog?.likes, session])
 
   return (
-    <div className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)]">
+    <div className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)] md:min-h-[500px]">
       <div className="p-[.8rem] w-full h-full flex flex-col gap-4">
         <Link className="flex-2" href={`/blog/${blog.slug}`}>
           {blog?.imageUrl && (
@@ -60,7 +60,7 @@ const BlogCard = ({ blog }) => {
           )}
         </Link>
 
-        <div className="flex-1 flex flex-col justify-between h-full px-4 pb-4">
+        <div className="flex-1 flex flex-col justify-between h-full px-4 pb-4 md:justify-around">
           <p className="text-[#6E778B]">{blog?.category}</p>
 
           <h3 className="text-[20px] font-bold">{blog?.title}</h3>

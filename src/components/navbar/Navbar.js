@@ -31,7 +31,13 @@ const Navbar = () => {
       <div className="w-[85%] m-[0 auto] flex justify-between items-center relative">
         <h2 className="text-4xl text-[#d14201]">
           <Link href="/">
-            <Image src={logo} alt="logo" width={130} height={500} />
+            <Image
+              src={logo}
+              alt="logo"
+              width={130}
+              height={500}
+              className="sm:w-[100px]"
+            />
           </Link>
         </h2>
         <ul className="flex items-center gap-[1.25rem]">
@@ -83,7 +89,7 @@ const Navbar = () => {
             <>
               <button
                 onClick={signIn}
-                className="border-none outline-none p-[.5rem_1.25rem] text-[17px] bg-[#d14201] text-white rounded-[6px]"
+                className="border-none outline-none p-[.5rem_1.25rem] text-[17px] bg-[#d14201] text-white rounded-[6px] sm:p-[.3rem_1rem]"
               >
                 Login
               </button>
