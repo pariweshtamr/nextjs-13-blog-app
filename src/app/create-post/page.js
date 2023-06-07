@@ -7,9 +7,13 @@ import { useSession } from "next-auth/react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { BsFillPlusCircleFill } from "react-icons/bs"
 import { toast } from "react-toastify"
+
+const Jodit = dynamic(() => import("../../components/jodit/Jodit"), {
+  ssr: false,
+})
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("")
@@ -21,12 +25,13 @@ const CreateBlog = () => {
   const cloudName = "ddbttkmhz"
   const uploadPreset = "next_blog"
 
-  const config = {
-    readonly: false,
-    placeholder: "Start typing...",
-  }
-
-  const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false })
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: "Start typing...",
+    }),
+    []
+  )
 
   const uploadImage = async () => {
     if (!photo) return
@@ -92,6 +97,7 @@ const CreateBlog = () => {
   } else if (status === "unauthenticated") {
     router.push("/")
   }
+
   return (
     <div className="mt-[3rem] h-[calc(100ch - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
@@ -159,7 +165,7 @@ const CreateBlog = () => {
               Publish
             </button>
           </div>
-          <JoditEditor ref={editor} config={config} required />
+          <Jodit editor={editor} config={config} required />
         </form>
       </div>
     </div>

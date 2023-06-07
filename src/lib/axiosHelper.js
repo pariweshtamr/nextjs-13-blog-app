@@ -135,6 +135,7 @@ export const toggleLike = async (objData) => {
 // edit blog
 export const editBlog = async (objData) => {
   const { slug, token, ...rest } = objData
+
   try {
     const obj = {
       method: "PUT",

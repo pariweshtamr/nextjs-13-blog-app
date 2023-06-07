@@ -69,7 +69,7 @@ const EditBlog = (obj) => {
       }
       const dirtyHtml = editor?.current?.value
       const cleanContent = DOMPurify.sanitize(dirtyHtml)
-
+      console.log(cleanContent)
       dispatch(
         editBlogAction({
           slug: obj.params.slug,

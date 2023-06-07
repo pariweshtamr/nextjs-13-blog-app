@@ -47,7 +47,7 @@ const BlogCard = ({ blog }) => {
 
   return (
     <div className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)] md:min-h-[500px]">
-      <div className="p-[.8rem] w-full h-full flex flex-col gap-4">
+      <div className="p-[.8rem] w-full h-full flex flex-col gap-4 min-xl:min-h-[45rem]">
         <Link className="flex-2" href={`/blog/${blog.slug}`}>
           {blog?.imageUrl && (
             <Image
