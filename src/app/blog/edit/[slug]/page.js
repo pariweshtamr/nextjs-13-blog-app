@@ -96,7 +96,7 @@ const EditBlog = (obj) => {
       setImg(selectedBlog.imageUrl)
       setContent(selectedBlog.content)
     }
-  }, [dispatch, obj.params.slug])
+  }, [dispatch, obj.params.slug, selectedBlog])
 
   if (status === "loading") {
     return <p>Loading...</p>
