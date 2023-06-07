@@ -1,9 +1,10 @@
 "use client"
+import Loader from "@/components/loader/Loader"
 import { createPost } from "@/lib/axiosHelper"
 import axios from "axios"
 import DOMPurify from "dompurify"
-import JoditEditor from "jodit-react"
 import { useSession } from "next-auth/react"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
@@ -24,6 +25,8 @@ const CreateBlog = () => {
     readonly: false,
     placeholder: "Start typing...",
   }
+
+  const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false })
 
   const uploadImage = async () => {
     if (!photo) return
@@ -85,7 +88,7 @@ const CreateBlog = () => {
   }
 
   if (status === "loading") {
-    return <p>Loading...</p>
+    return <Loader />
   } else if (status === "unauthenticated") {
     return (
       <p className="w-full text-center mt-[5rem] text-[32px] font-bold">
@@ -124,6 +127,7 @@ const CreateBlog = () => {
                 id="image"
                 style={{ display: "none" }}
                 onChange={(e) => setPhoto(e.target.files[0])}
+                required
               />
               <input
                 type="text"
@@ -137,6 +141,7 @@ const CreateBlog = () => {
             <select
               onChange={(e) => setCategory(e.target.value)}
               defaultValue={0}
+              required
               className="p-[.7rem_1rem] outline-none cursor-pointer appearance-none border border-solid border-[#666] resize-none rounded-[6px] md:p-[.4rem_.8rem]"
             >
               <option value={0} disabled>
