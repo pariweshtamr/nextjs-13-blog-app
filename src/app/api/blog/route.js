@@ -1,9 +1,9 @@
 import dbConnect from "@/lib/db"
 import { verifyJwtToken } from "@/lib/jwt"
+import User from "@/models/User"
 import Blog from "@/models/Blog"
 import slugify from "slugify"
 import DOMPurify from "isomorphic-dompurify"
-import User from "@/models/User"
 
 export async function GET(req) {
   await dbConnect()

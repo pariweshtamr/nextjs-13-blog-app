@@ -1,6 +1,6 @@
-import { hashPassword } from "@/lib/bcrypt"
 import dbConnect from "@/lib/db"
 import User from "@/models/User"
+import { hashPassword } from "@/lib/bcrypt"
 
 export async function POST(req) {
   try {

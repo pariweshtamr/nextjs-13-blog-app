@@ -1,8 +1,8 @@
 import dbConnect from "@/lib/db"
-import { verifyJwtToken } from "@/lib/jwt"
-import Blog from "@/models/Blog"
 import User from "@/models/User"
+import Blog from "@/models/Blog"
 import DOMPurify from "isomorphic-dompurify"
+import { verifyJwtToken } from "@/lib/jwt"
 
 export async function GET(req, obj) {
   await dbConnect()

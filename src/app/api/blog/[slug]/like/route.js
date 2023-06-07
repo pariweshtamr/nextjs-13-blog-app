@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/db"
-import { verifyJwtToken } from "@/lib/jwt"
 import Blog from "@/models/Blog"
+import { verifyJwtToken } from "@/lib/jwt"
 
 export async function PUT(req, obj) {
   await dbConnect()

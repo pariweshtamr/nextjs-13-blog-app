@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/db"
-import { verifyJwtToken } from "@/lib/jwt"
-import Comment from "@/models/Comment"
 import User from "@/models/User"
+import Comment from "@/models/Comment"
+import { verifyJwtToken } from "@/lib/jwt"
 
 export async function DELETE(req, obj) {
   await dbConnect()
