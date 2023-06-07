@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/db"
 import { verifyJwtToken } from "@/lib/jwt"
 import Blog from "@/models/Blog"
+import User from "@/models/User"
 import DOMPurify from "isomorphic-dompurify"
 
 export async function GET(req, obj) {
@@ -9,7 +10,7 @@ export async function GET(req, obj) {
 
   try {
     const blog = await Blog.findOne({ slug })
-      .populate("authorId")
+      .populate("authorId", User)
       .select("-password")
 
     return new Response(JSON.stringify({ status: "success", blog }), {
@@ -40,7 +41,7 @@ export async function PUT(req, obj) {
     const { cleanContent, ...rest } = body
     const content = DOMPurify.sanitize(cleanContent)
 
-    const blog = await Blog.findOne({ slug }).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate("authorId", User)
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
@@ -89,7 +90,7 @@ export async function DELETE(req, obj) {
   }
 
   try {
-    const blog = await Blog.findOne({ slug }).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate("authorId", User)
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
