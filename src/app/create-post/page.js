@@ -100,7 +100,7 @@ const CreateBlog = () => {
           Create Post
         </h2>
         <div>
-          {photo && (
+          {photo ? (
             <Image
               src={URL.createObjectURL(photo)}
               alt="post-img"
@@ -108,6 +108,8 @@ const CreateBlog = () => {
               height={2100}
               className="w-1/2 h-1/2 m-[0_auto] mt-[2rem] md:w-full"
             />
+          ) : (
+            ""
           )}
         </div>
 

@@ -122,7 +122,7 @@ const BlogDetails = (obj) => {
       setComments(cmnts)
     }
     fetchComments()
-  }, [])
+  }, [obj.params.slug])
 
   useEffect(() => {
     dispatch(getSingleBlogAction(obj.params.slug))
