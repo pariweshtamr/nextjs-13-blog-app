@@ -126,13 +126,13 @@ const BlogDetails = (obj) => {
 
   useEffect(() => {
     dispatch(getSingleBlogAction(obj.params.slug))
-    setPost(selectedBlog)
+    setPost((prev) => selectedBlog)
 
     if (selectedBlog) {
       setIsLiked(selectedBlog?.likes?.includes(session?.user?._id))
       setPostLikes(selectedBlog?.likes?.length || 0)
     }
-  }, [dispatch])
+  }, [dispatch, obj.params.slug, selectedBlog, session?.user?._id])
 
   let clean = DOMPurify.sanitize(selectedBlog?.content, {
     USE_PROFILES: { html: true },
