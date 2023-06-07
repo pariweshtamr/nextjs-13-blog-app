@@ -67,11 +67,11 @@ export const createPost = async (objData) => {
 }
 
 // get all blogs
-export const getAllBlogs = async (page) => {
+export const getAllBlogs = async () => {
   try {
     const obj = {
       method: "GET",
-      url: `${blogEp}?page=${page}`,
+      url: blogEp,
     }
     return await axiosProcessor(obj)
   } catch (error) {

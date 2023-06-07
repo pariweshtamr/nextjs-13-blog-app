@@ -17,7 +17,7 @@ const Home = () => {
   const pageSize = 6
 
   const onPageChange = (page) => {
-    setCurrentPage(page)
+    setCurrentPage((prev) => page)
   }
 
   useEffect(() => {

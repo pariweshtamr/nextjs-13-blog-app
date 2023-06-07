@@ -90,11 +90,7 @@ const CreateBlog = () => {
   if (status === "loading") {
     return <Loader />
   } else if (status === "unauthenticated") {
-    return (
-      <p className="w-full text-center mt-[5rem] text-[32px] font-bold">
-        Access Denied
-      </p>
-    )
+    router.push("/")
   }
   return (
     <div className="mt-[3rem] h-[calc(100ch - 60px)] w-full">
