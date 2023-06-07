@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/db"
-import User from "@/models/User"
 import Blog from "@/models/Blog"
 import Comment from "@/models/Comment"
 
@@ -24,8 +23,7 @@ export async function GET(req, obj) {
   try {
     const blog = await Blog.findOne({ slug })
     const comments = await Comment.find({ blogId: blog?._id }).populate(
-      "authorId",
-      User
+      "authorId"
     )
 
     return new Response(JSON.stringify(comments), { status: 200 })

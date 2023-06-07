@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/db"
-import User from "@/models/User"
 import Comment from "@/models/Comment"
 import { verifyJwtToken } from "@/lib/jwt"
 
@@ -19,7 +18,7 @@ export async function DELETE(req, obj) {
     )
   }
   try {
-    const comment = await Comment.findById(id).populate("authorId", User)
+    const comment = await Comment.findById(id).populate("authorId")
     if (comment.authorId._id.toString() !== decodedToken._id.toString()) {
       return new Response(
         JSON.stringify({ msg: "Only the author can delete the comment!" }),

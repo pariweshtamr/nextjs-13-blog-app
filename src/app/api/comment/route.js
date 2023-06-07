@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/db"
-import User from "@/models/User"
 import Blog from "@/models/Blog"
 import Comment from "@/models/Comment"
 import { verifyJwtToken } from "@/lib/jwt"
@@ -24,7 +23,7 @@ export async function POST(req) {
     const blog = await Blog.findOne({ slug })
 
     let newComment = await Comment.create({ blogId: blog?._id, ...rest })
-    newComment = await newComment.populate("authorId", User)
+    newComment = await newComment.populate("authorId")
 
     return new Response(
       JSON.stringify({
