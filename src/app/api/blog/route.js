@@ -3,6 +3,7 @@ import { verifyJwtToken } from "@/lib/jwt"
 import Blog from "@/models/Blog"
 import slugify from "slugify"
 import DOMPurify from "isomorphic-dompurify"
+import User from "@/models/User"
 
 export async function GET(req) {
   await dbConnect()
@@ -10,7 +11,7 @@ export async function GET(req) {
   try {
     const blogs = await Blog.find({})
       .limit(16)
-      .populate({ path: "authorId", model: "User" })
+      .populate({ path: "authorId", model: User })
     return new Response(
       JSON.stringify({ count: blogs.length, status: "success", blogs })
     )
