@@ -22,8 +22,6 @@ const Home = () => {
     setCurrentPage((prev) => page)
   }
 
-  console.log(blogs)
-
   useEffect(() => {
     dispatch(getAllBlogsAction())
   }, [dispatch])
