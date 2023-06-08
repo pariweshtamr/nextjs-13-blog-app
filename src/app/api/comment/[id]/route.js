@@ -18,7 +18,11 @@ export async function DELETE(req, obj) {
     )
   }
   try {
-    const comment = await Comment.findById(id).populate("authorId")
+    const comment = await Comment.findById(id).populate({
+      path: "authorId",
+      select: "-password, -__v",
+      model: User,
+    })
     if (comment.authorId._id.toString() !== decodedToken._id.toString()) {
       return new Response(
         JSON.stringify({ msg: "Only the author can delete the comment!" }),

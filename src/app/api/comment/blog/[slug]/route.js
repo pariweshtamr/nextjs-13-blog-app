@@ -22,9 +22,11 @@ export async function GET(req, obj) {
   // }
   try {
     const blog = await Blog.findOne({ slug })
-    const comments = await Comment.find({ blogId: blog?._id }).populate(
-      "authorId"
-    )
+    const comments = await Comment.find({ blogId: blog?._id }).populate({
+      path: "authorId",
+      select: "-password, -__v",
+      model: User,
+    })
 
     return new Response(JSON.stringify(comments), { status: 200 })
   } catch (error) {

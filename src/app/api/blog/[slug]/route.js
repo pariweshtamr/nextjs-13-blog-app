@@ -8,9 +8,11 @@ export async function GET(req, obj) {
   const slug = obj.params.slug
 
   try {
-    const blog = await Blog.findOne({ slug })
-      .populate("authorId")
-      .select("-password")
+    const blog = await Blog.findOne({ slug }).populate({
+      path: "authorId",
+      select: "-password, -__v",
+      model: User,
+    })
 
     return new Response(JSON.stringify({ status: "success", blog }), {
       status: 200,
@@ -40,7 +42,11 @@ export async function PUT(req, obj) {
     const { cleanContent, ...rest } = body
     const content = DOMPurify.sanitize(cleanContent)
 
-    const blog = await Blog.findOne({ slug }).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate({
+      path: "authorId",
+      select: "-password, -__v",
+      model: User,
+    })
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
@@ -89,7 +95,11 @@ export async function DELETE(req, obj) {
   }
 
   try {
-    const blog = await Blog.findOne({ slug }).populate("authorId")
+    const blog = await Blog.findOne({ slug }).populate({
+      path: "authorId",
+      select: "-password, -__v",
+      model: User,
+    })
 
     if (blog?.authorId?._id.toString() !== decodedToken._id.toString()) {
       return new Response(
