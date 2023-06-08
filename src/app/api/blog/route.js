@@ -8,7 +8,9 @@ export async function GET(req) {
   await dbConnect()
 
   try {
-    const blogs = await Blog.find({}).limit(16).populate("authorId")
+    const blogs = await Blog.find({})
+      .limit(16)
+      .populate({ path: "authorId", model: "User" })
     return new Response(
       JSON.stringify({ count: blogs.length, status: "success", blogs })
     )
