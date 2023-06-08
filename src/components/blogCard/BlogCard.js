@@ -47,25 +47,25 @@ const BlogCard = ({ blog }) => {
 
   return (
     <div className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)] md:min-h-[500px]">
-      <div className="p-[.8rem] w-full h-full flex flex-col gap-4 min-xl:min-h-[45rem]">
-        <Link className="flex-2" href={`/blog/${blog.slug}`}>
+      <div className="p-[.8rem] w-full h-full flex flex-col gap-3 min-xl:min-h-[45rem]">
+        <Link className="h-1/2" href={`/blog/${blog.slug}`}>
           {blog?.imageUrl && (
             <Image
               src={blog?.imageUrl}
               alt="blog-img"
               width={350}
               height={350}
-              className="object-cover rounded-md w-full"
+              className="object-cover rounded-md w-full h-full"
             />
           )}
         </Link>
 
-        <div className="flex-1 flex flex-col justify-between h-full px-4 pb-4 md:justify-around">
+        <div className="h-1/2 flex flex-col justify-between px-4 pb-4 md:justify-around">
           <p className="text-[#6E778B]">{blog?.category}</p>
 
           <h3 className="text-[20px] font-bold">{blog?.title}</h3>
 
-          <div className="text-[#666] overflow-hidden text-ellipsis  block blog-card">
+          <div className="text-[#666] overflow-hidden text-ellipsis block blog-card">
             {parse(clean)}
           </div>
 

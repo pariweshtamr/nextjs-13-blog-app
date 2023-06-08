@@ -8,6 +8,8 @@ import Link from "next/link"
 import Image from "next/image"
 import Pagination from "@/components/pagination/Pagination"
 import { paginate } from "@/lib/paginate"
+import parse from "html-react-parser"
+import DOMPurify from "dompurify"
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -58,10 +60,10 @@ const Home = () => {
                 {sortedPosts?.length &&
                   sortedPosts.slice(0, 1).map((post) => (
                     <div
-                      className="p-3 border-2 border-solid border-[#1D2031] rounded-lg flex flex-col h-full bg-white"
+                      className="p-3 border-2 border-solid border-[#1D2031] rounded-lg flex flex-col min-h-[560px] h-full bg-white"
                       key={post._id}
                     >
-                      <Link className="flex-2" href={`/blog/${post.slug}`}>
+                      <Link className="h-1/2" href={`/blog/${post.slug}`}>
                         {post?.imageUrl && (
                           <Image
                             src={post?.imageUrl}
@@ -72,7 +74,7 @@ const Home = () => {
                           />
                         )}
                       </Link>
-                      <div className="flex-1 px-5 pb-4 pt-6 flex flex-col justify-between lg:gap-4">
+                      <div className="h-1/2 px-5 pt-8 flex flex-col justify-between gap-5 lg:gap-4">
                         <div className="bg-[#000] text-white w-max px-3 py-1 rounded-full text-sm">
                           {post.category}
                         </div>
@@ -80,6 +82,14 @@ const Home = () => {
                         <h3 className="font-bold text-[1D2031] text-[2rem] lg:text-xl">
                           {post.title}
                         </h3>
+
+                        <div className="text-[#666] overflow-hidden text-ellipsis block blog-card">
+                          {parse(
+                            DOMPurify.sanitize(post?.content, {
+                              USE_PROFILES: { html: true },
+                            })
+                          )}
+                        </div>
 
                         <div className="flex gap-3">
                           <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
