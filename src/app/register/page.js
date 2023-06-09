@@ -17,6 +17,7 @@ const Register = () => {
   const [form, setForm] = useState(initialState)
   const [reveal, setReveal] = useState(false)
   const [photo, setPhoto] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const cloudName = "ddbttkmhz"
   const uploadPreset = "next_blog"
 
@@ -66,10 +67,13 @@ const Register = () => {
     }
 
     try {
+      setIsLoading(true)
       const { status, message } = await registerUser({ ...rest, profileImg })
+      setIsLoading(false)
       status && toast[status](message)
       setForm(initialState)
     } catch (error) {
+      setIsLoading(false)
       console.log(error)
     }
   }

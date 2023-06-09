@@ -60,7 +60,7 @@ const Home = () => {
                 {sortedPosts?.length &&
                   sortedPosts.slice(0, 1).map((post) => (
                     <div
-                      className="p-3 border-2 border-solid border-[#1D2031] rounded-lg flex flex-col min-h-[560px] h-full bg-white"
+                      className="p-3 border-2 border-solid border-[#1D2031] rounded-lg flex flex-col min-h-[550px] h-full bg-white"
                       key={post._id}
                     >
                       <Link className="h-1/2" href={`/blog/${post.slug}`}>
@@ -74,12 +74,12 @@ const Home = () => {
                           />
                         )}
                       </Link>
-                      <div className="h-1/2 px-5 pt-8 flex flex-col justify-between gap-5 lg:gap-4">
+                      <div className="h-1/2 px-5 pt-8 flex flex-col justify-between gap-3 lg:gap-3">
                         <div className="bg-[#000] text-white w-max px-3 py-1 rounded-full text-sm">
                           {post.category}
                         </div>
 
-                        <h3 className="font-bold text-[1D2031] text-[2rem] lg:text-xl">
+                        <h3 className="font-bold text-[1D2031] text-[1.7rem] lg:text-xl">
                           {post.title}
                         </h3>
 

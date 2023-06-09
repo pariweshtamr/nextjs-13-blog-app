@@ -1,4 +1,5 @@
 "use client"
+import Spinner from "@/components/spinner/Spinner"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -15,6 +16,7 @@ const Login = () => {
   const router = useRouter()
   const [form, setForm] = useState(initialState)
   const [reveal, setReveal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -32,6 +34,7 @@ const Login = () => {
     }
 
     try {
+      setIsLoading(true)
       const res = await signIn("credentials", {
         email,
         password,
@@ -40,11 +43,14 @@ const Login = () => {
       })
 
       if (res?.error === null) {
+        setIsLoading(false)
         router.push("/")
       } else {
+        setIsLoading(false)
         toast.error(res.error)
       }
     } catch (error) {
+      setIsLoading(false)
       console.log(error.message)
     }
   }
@@ -92,7 +98,7 @@ const Login = () => {
             )}
           </div>
           <button className="outline-0 p-[0.5rem_1.5rem] rounded-[6px] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#d14201] transition-[150ms] tracking-[0.5px] hover:border-[#d14201] hover:bg-[#d14201] hover:text-[#efefef] ">
-            Login
+            {isLoading ? <Spinner /> : "Login"}
           </button>
           <div className="text-[16px] mt-[1.75rem] text-center">
             Don&apos;t have an account? <br />
