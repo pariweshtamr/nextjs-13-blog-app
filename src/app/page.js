@@ -10,6 +10,7 @@ import Pagination from "@/components/pagination/Pagination"
 import { paginate } from "@/lib/paginate"
 import parse from "html-react-parser"
 import { sanitize } from "dompurify"
+import avatar from "../../public/avatar.jpg"
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -93,13 +94,23 @@ const Home = () => {
 
                         <div className="flex gap-3">
                           <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
-                            <Image
-                              src={post.authorId.profileImg}
-                              alt="profile-img"
-                              width={60}
-                              height={60}
-                              className="rounded-full"
-                            />
+                            {post?.authorId?.profileImg ? (
+                              <Image
+                                src={post.authorId.profileImg}
+                                alt="profile-img"
+                                width={60}
+                                height={60}
+                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+                              />
+                            ) : (
+                              <Image
+                                src={avatar}
+                                alt="profile-img"
+                                width={60}
+                                height={60}
+                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+                              />
+                            )}
                           </div>
                           <div className="flex flex-col justify-center gap-1">
                             <h5 className="font-bold">

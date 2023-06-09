@@ -1,4 +1,5 @@
 "use client"
+import Spinner from "@/components/spinner/Spinner"
 import { registerUser } from "@/lib/axiosHelper"
 import axios from "axios"
 import Link from "next/link"
@@ -15,11 +16,30 @@ const initialState = {
 }
 const Register = () => {
   const [form, setForm] = useState(initialState)
+  const [meter, setMeter] = useState(false)
   const [reveal, setReveal] = useState(false)
   const [photo, setPhoto] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const cloudName = "ddbttkmhz"
   const uploadPreset = "next_blog"
+
+  const atLeastOneUpperCase = /[A-Z]/g // capital letters from A - Z
+  const atLeastOneLowerCase = /[a-z]/g // capital letters from a - z
+  const atleastOneNumeric = /[0-9]/g // numbers from 0 - 9
+  const atLeastOneSpecialChar = /[!@#$%^&*()_+?./-]/g // any of the special characters with the square brackets
+  const sevenCharsOrMore = /.{7,}/g // seven or more characters
+
+  const passwordTracker = {
+    uppercase: form.password.match(atLeastOneUpperCase),
+    lowercase: form.password.match(atLeastOneLowerCase),
+    numeric: form.password.match(atleastOneNumeric),
+    specialChar: form.password.match(atLeastOneSpecialChar),
+    sevenOrMoreChars: form.password.match(sevenCharsOrMore),
+  }
+
+  const passwordStrength = Object.values(passwordTracker).filter(
+    (value) => value
+  ).length
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -62,9 +82,8 @@ const Register = () => {
     if (rest.password !== confirmPassword) {
       return toast.error("Password do not match!")
     }
-    if (rest.password.length < 6) {
-      return toast.error("Password must be atleast 6 characters long!")
-    }
+
+    if (passwordStrength !== 5) return
 
     try {
       setIsLoading(true)
@@ -79,7 +98,7 @@ const Register = () => {
   }
 
   return (
-    <div className="mt-[5rem] h-[calc(100vh - 60px)] w-full">
+    <div className="mt-[2rem] h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
         <h2 className="text-[32px] text-[#222] tracking-[1px]">Register</h2>
         <p className="text-[12px] text-[#555]">
@@ -87,7 +106,7 @@ const Register = () => {
         </p>
         <form
           onSubmit={handleSubmit}
-          className="mt-[2rem] w-[25%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem] sm:w-[100%] lg:w-[60%]"
+          className="mt-[2rem] w-[30%] p-[1.5rem] border-[1px] border-solid border-[#666] rounded-[8px] flex flex-col justify-center items-center gap-[2rem] sm:w-[100%] lg:w-[60%]"
         >
           <input
             type="text"
@@ -109,10 +128,12 @@ const Register = () => {
           />
           <div className="w-full relative">
             <input
+              onKeyDown={() => setMeter(true)}
               type={reveal ? "text" : "password"}
               placeholder="********"
               onChange={handleChange}
               value={form.password}
+              minLength={7}
               required
               name="password"
               className="outline-none border-b border-b-[#666] p-[0.5rem] w-full"
@@ -129,6 +150,60 @@ const Register = () => {
               />
             )}
           </div>
+          {meter && (
+            <>
+              <div className="text-[.8rem] text-[#333]">
+                Password Strength:{" "}
+                {passwordStrength === 1
+                  ? "Poor"
+                  : passwordStrength === 2
+                  ? "Fair"
+                  : passwordStrength === 3
+                  ? "Good"
+                  : passwordStrength === 4
+                  ? "Good"
+                  : passwordStrength === 5
+                  ? "Excellent"
+                  : ""}
+              </div>
+              <div
+                className={`h-[.3rem] w-full bg-[lightgray] rounded-[3px] before:h-full before:rounded-[3px] before:block ${
+                  passwordStrength === 1
+                    ? "before:w-[20%]"
+                    : passwordStrength === 2
+                    ? "before:w-[40%]"
+                    : passwordStrength === 3
+                    ? "before:w-[60%]"
+                    : passwordStrength === 4
+                    ? "before:w-[80%]"
+                    : passwordStrength === 5
+                    ? "before:w-[100%]"
+                    : "before:w-[0%]"
+                } ${
+                  passwordStrength === 1
+                    ? "before:bg-[red]"
+                    : passwordStrength === 2
+                    ? "before:bg-[yellow]"
+                    : passwordStrength === 3
+                    ? "before:bg-[#03a2cc]"
+                    : passwordStrength === 4
+                    ? "before:bg-[#03a2cc]"
+                    : passwordStrength === 5
+                    ? "before:bg-[#0ce052]"
+                    : "before:bg-[lightgray]"
+                }`}
+              ></div>
+
+              <div className="text-[0.7rem]">
+                {passwordStrength < 5 && "Must contain "}
+                {!passwordTracker.uppercase && "uppercase, "}
+                {!passwordTracker.lowercase && "lowercase, "}
+                {!passwordTracker.specialChar && "special character, "}
+                {!passwordTracker.numeric && "number, "}
+                {!passwordTracker.sevenOrMoreChars && "seven character or more"}
+              </div>
+            </>
+          )}
           <input
             type="password"
             placeholder="********"
@@ -151,10 +226,10 @@ const Register = () => {
             style={{ display: "none" }}
             onChange={(e) => setPhoto(e.target.files[0])}
           />
-          <button className="outline-0 p-[0.5rem_1rem] rounded-[6px] border-[1px] border-solid border-transparent text[17px] font-bold bg-[#efefef] text-[#d14201] transition-[150ms] tracking-[0.5px] hover:border-[#d14201] hover:bg-[#d14201] hover:text-[#efefef] ">
-            Register
+          <button className="outline-0 p-[0.5rem_1rem] rounded-[6px] border-[1px] border-solid border-transparent text[16px] font-bold bg-[#efefef] text-[#d14201] transition-[150ms] tracking-[0.5px] hover:border-[#d14201] hover:bg-[#d14201] hover:text-[#efefef] ">
+            {isLoading ? <Spinner /> : "Register"}
           </button>
-          <div className="text-[16px] mt-[1.75rem] text-center">
+          <div className="text-sm text-center">
             Already have an account? <br />
             <Link
               href="/login"

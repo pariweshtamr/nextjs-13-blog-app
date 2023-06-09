@@ -2,7 +2,7 @@
 import Spinner from "@/components/spinner/Spinner"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import { MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { toast } from "react-toastify"
@@ -17,13 +17,13 @@ const Login = () => {
   const [form, setForm] = useState(initialState)
   const [reveal, setReveal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const location = usePathname()
 
   const handleChange = (e) => {
     const { name, value } = e.target
 
     setForm({ ...form, [name]: value })
   }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -39,7 +39,7 @@ const Login = () => {
         email,
         password,
         redirect: false,
-        callbackUrl: "/",
+        callbackUrl: `${window.location.origin}`,
       })
 
       if (res?.error === null) {

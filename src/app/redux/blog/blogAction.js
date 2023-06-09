@@ -1,4 +1,10 @@
-import { createPost, editBlog, getAllBlogs, getBlog } from "@/lib/axiosHelper"
+import {
+  createPost,
+  editBlog,
+  getAllBlogs,
+  getBlog,
+  getUserBlogs,
+} from "@/lib/axiosHelper"
 
 import {
   createBlogSuccess,
@@ -7,7 +13,6 @@ import {
   requestPending,
 } from "./blogSlice"
 import { toast } from "react-toastify"
-import { Router } from "next/router"
 
 export const getAllBlogsAction = () => async (dispatch) => {
   try {
@@ -68,6 +73,22 @@ export const editBlogAction = (obj) => async (dispatch) => {
     status === "success"
       ? dispatch(getSelectedBlogSuccess(blog)) && toast[status](message)
       : dispatch(getSelectedBlog()) && toast[status](message)
+  } catch (error) {
+    return {
+      status: "error",
+      error: error.message,
+    }
+  }
+}
+
+export const getUserBlogsAction = (id) => async (dispatch) => {
+  try {
+    dispatch(requestPending())
+    const { status, blogs } = await getUserBlogs(id)
+
+    status === "success"
+      ? dispatch(getBlogsSuccess(blogs))
+      : dispatch(getBlogsSuccess())
   } catch (error) {
     return {
       status: "error",

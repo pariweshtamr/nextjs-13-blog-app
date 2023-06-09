@@ -53,8 +53,11 @@ const Navbar = () => {
                   className="object-cover rounded-[50%] cursor-pointer"
                 />
               ) : (
-                <p onClick={handleShowDropdown} className="cursor-pointer">
-                  {session?.user?.email}
+                <p
+                  onClick={handleShowDropdown}
+                  className="cursor-pointer font-bold capitalize"
+                >
+                  {session?.user?.username}
                 </p>
               )}
 
@@ -65,20 +68,29 @@ const Navbar = () => {
                     className="absolute top-[0.3rem] right-[0.3rem] cursor-pointer hover:bg-black hover:text-white hover:rounded-[50%] sm:text-xs"
                     onClick={handleHideDropdown}
                   />
+
+                  <Link
+                    onClick={handleHideDropdown}
+                    href={`/${session?.user?.username}`}
+                    className="text-[#444] text-[18px] font-[300] mt-[1rem] hover:text-[#d14201] sm:text-sm"
+                  >
+                    Profile
+                  </Link>
+
                   <Link
                     onClick={handleHideDropdown}
                     href="/create-post"
-                    className="text-[#444] text-[18px] font-[300] mt-[1rem] hover:text-[#d14201] sm:text-sm"
+                    className="text-[#444] text-[18px] font-[300] hover:text-[#d14201] sm:text-sm"
                   >
-                    Create
+                    Create post
                   </Link>
 
                   <button
                     onClick={() => {
-                      signOut()
+                      signOut({ callbackUrl: "/" })
                       handleHideDropdown()
                     }}
-                    className="p-[0.4rem_1rem] border-none text-white rounded-[6px] font-bold text-[17px] bg-[#d14201] sm:text-sm sm:p-[.2rem_.8rem]"
+                    className="p-[0.4rem_1rem] w-full border-none text-white rounded-[6px] font-bold text-[17px] bg-[#d14201] sm:text-sm sm:p-[.2rem_.8rem]"
                   >
                     Logout
                   </button>

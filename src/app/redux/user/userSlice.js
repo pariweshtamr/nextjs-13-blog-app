@@ -15,13 +15,17 @@ const userSlice = createSlice({
     },
     loginSuccess: (state, { payload }) => {
       state.isLoading = false
-      state.user = payload || []
+      state.user = payload || {}
+    },
+    getUserSuccess: (state, { payload }) => {
+      state.isLoading = false
+      state.user = payload
     },
   },
 })
 
 const { actions, reducer } = userSlice
 
-export const { requestPending, loginSuccess } = actions
+export const { requestPending, loginSuccess, getUserSuccess } = actions
 
 export default reducer

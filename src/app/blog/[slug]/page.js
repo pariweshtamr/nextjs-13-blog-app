@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getSingleBlogAction } from "@/app/redux/blog/blogAction"
 import avatar from "/public/avatar.jpg"
 import { sanitize } from "dompurify"
+import BackButton from "@/components/backButton/BackButton"
 
 const BlogDetails = (obj) => {
   const dispatch = useDispatch()
@@ -30,7 +31,6 @@ const BlogDetails = (obj) => {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState("")
   const { data: session } = useSession()
-
   const router = useRouter()
 
   const handleComment = async (e) => {
@@ -148,6 +148,9 @@ const BlogDetails = (obj) => {
   return (
     <div className="min-h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] sm:w-[90%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
+        <div className="mx-0 justify-self-start self-start mb-5">
+          <BackButton />
+        </div>
         <div className="w-[800px] h-auto lg:w-full">
           {post?.imageUrl && (
             <Image
@@ -225,13 +228,20 @@ const BlogDetails = (obj) => {
             onSubmit={handleComment}
             className="p-[1rem] w-full flex items-center gap-[1.5rem] border-b border-b-solid border-b-[#555]"
           >
-            <Image
-              src={session ? session?.user?.profileImg : avatar}
-              width={50}
-              height={50}
-              alt="random-person"
-              className="object-cover rounded-full sm:hidden"
-            />
+            {session?.user ? (
+              <Image
+                src={
+                  session?.user?.profileImg ? session?.user?.profileImg : avatar
+                }
+                width={50}
+                height={50}
+                alt="random-person"
+                className="object-cover rounded-full sm:hidden"
+              />
+            ) : (
+              ""
+            )}
+
             <input
               type="text"
               value={commentText}

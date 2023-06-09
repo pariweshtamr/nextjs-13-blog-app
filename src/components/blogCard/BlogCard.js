@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { AiFillLike, AiOutlineLike } from "react-icons/ai"
 import parse from "html-react-parser"
 import DOMPurify from "dompurify"
+import avatar from "../../../public/avatar.jpg"
 
 const BlogCard = ({ blog }) => {
   const { data: session } = useSession()
@@ -55,7 +56,7 @@ const BlogCard = ({ blog }) => {
               alt="blog-img"
               width={350}
               height={350}
-              className="object-cover rounded-md w-full h-full"
+              className="object-cover rounded-md w-full h-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
             />
           )}
         </Link>
@@ -73,11 +74,15 @@ const BlogCard = ({ blog }) => {
             <div className="flex gap-3">
               <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
                 <Image
-                  src={blog?.authorId?.profileImg}
+                  src={
+                    blog?.authorId?.profileImg
+                      ? blog?.authorId?.profileImg
+                      : avatar
+                  }
                   alt="profile-img"
                   width={45}
                   height={45}
-                  className="rounded-full"
+                  className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
                 />
               </div>
               <div className="flex flex-col justify-center gap-1">

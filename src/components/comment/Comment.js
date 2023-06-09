@@ -4,6 +4,7 @@ import Image from "next/image"
 import { BsTrash } from "react-icons/bs"
 import { format } from "timeago.js"
 import { toast } from "react-toastify"
+import avatar from "../../../public/avatar.jpg"
 
 const Comment = ({ comment, setComments }) => {
   const { data: session } = useSession()
@@ -31,12 +32,17 @@ const Comment = ({ comment, setComments }) => {
       <div className="w-[85%] sm:w-full h-full m-[0_auto] flex justify-between items-center">
         <div className="flex gap-[1.25rem]">
           <Image
-            src={session?.user?.profileImg}
+            src={
+              comment?.authorId?.profileImg
+                ? comment?.authorId?.profileImg
+                : avatar
+            }
             width={50}
             height={50}
             alt="profile-pic"
             className="w-[50px] h-[50px] object-cover rounded-full self-center sm:hidden"
           />
+
           <div className="flex flex-col items-start gap-[.25rem]">
             <h4 className="sm:text-[12px]">{comment?.authorId?.username}</h4>
             <span className="text-[15px] text-[#555] sm:text-[10px]">

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import { createBlogAction } from "../redux/blog/blogAction"
 import Spinner from "@/components/spinner/Spinner"
+import BackButton from "@/components/backButton/BackButton"
 
 const Jodit = dynamic(() => import("../../components/jodit/Jodit"), {
   ssr: false,
@@ -107,9 +108,12 @@ const CreateBlog = () => {
   return (
     <div className="mt-[3rem] h-[calc(100ch - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
-        <h2 className="text-[32px] text-[#222] tracking-[1px] font-bold underline">
-          Create Post
-        </h2>
+        <div className="flex justify-start w-full relative">
+          <BackButton />
+          <h2 className="text-[32px] text-[#222] tracking-[1px] font-bold underline absolute left-1/2 -translate-x-1/2 ">
+            Create Post
+          </h2>
+        </div>
         <div>
           {photo ? (
             <Image

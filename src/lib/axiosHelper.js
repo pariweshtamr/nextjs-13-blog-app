@@ -1,6 +1,7 @@
 import axios from "axios"
 
 const apiRootUrl = "/api"
+const userEp = apiRootUrl + "/user"
 const registerEp = apiRootUrl + "/register"
 const blogEp = apiRootUrl + "/blog"
 const commentEp = apiRootUrl + "/comment"
@@ -35,6 +36,22 @@ export const registerUser = async (objData) => {
       method: "POST",
       url: registerEp,
       objData,
+    }
+    return await axiosProcessor(obj)
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    }
+  }
+}
+
+// get user
+export const getUser = async (id) => {
+  try {
+    const obj = {
+      method: "GET",
+      url: `${userEp}/${id}`,
     }
     return await axiosProcessor(obj)
   } catch (error) {
@@ -103,6 +120,23 @@ export const getBlog = async (slug) => {
     const obj = {
       method: "GET",
       url: `${blogEp}/${slug}`,
+    }
+    return await axiosProcessor(obj)
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    }
+  }
+}
+
+// get user's blogs
+export const getUserBlogs = async (id) => {
+  console.log(id)
+  try {
+    const obj = {
+      method: "GET",
+      url: `${blogEp}/user/${id}`,
     }
     return await axiosProcessor(obj)
   } catch (error) {
