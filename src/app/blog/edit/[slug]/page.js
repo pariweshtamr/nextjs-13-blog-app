@@ -3,6 +3,7 @@ import {
   editBlogAction,
   getSingleBlogAction,
 } from "@/app/redux/blog/blogAction"
+import Spinner from "@/components/spinner/Spinner"
 import axios from "axios"
 import DOMPurify from "dompurify"
 import JoditEditor from "jodit-react"
@@ -23,7 +24,7 @@ const EditBlog = (obj) => {
   const [photo, setPhoto] = useState("")
   const editor = useRef(null)
   const { data: session, status } = useSession()
-  const { selectedBlog } = useSelector((state) => state.blog)
+  const { isLoading, selectedBlog } = useSelector((state) => state.blog)
   const router = useRouter()
 
   const config = {
@@ -69,7 +70,6 @@ const EditBlog = (obj) => {
       }
       const dirtyHtml = editor?.current?.value
       const cleanContent = DOMPurify.sanitize(dirtyHtml)
-      console.log(cleanContent)
       dispatch(
         editBlogAction({
           slug: obj.params.slug,
@@ -179,7 +179,7 @@ const EditBlog = (obj) => {
               type="submit"
               className="mt-[2.5rem outline-none border border-solid border-transparent p-[.7rem_1rem] rounded-[6px] bg-[#efefef] text-[#d14201] cursor-pointer transition-[150ms] hover:bg-[#d14201] hover:border-[#d14201] hover:text-[#efefef]"
             >
-              Publish
+              {isLoading ? <Spinner /> : "Edit"}
             </button>
           </div>
           <JoditEditor ref={editor} value={content} config={config} required />

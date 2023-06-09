@@ -1,21 +1,26 @@
 "use client"
 import Loader from "@/components/loader/Loader"
-import { createPost } from "@/lib/axiosHelper"
 import axios from "axios"
 import DOMPurify from "dompurify"
 import { useSession } from "next-auth/react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { BsFillPlusCircleFill } from "react-icons/bs"
+import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
+import { createBlogAction } from "../redux/blog/blogAction"
+import Spinner from "@/components/spinner/Spinner"
 
 const Jodit = dynamic(() => import("../../components/jodit/Jodit"), {
   ssr: false,
 })
 
 const CreateBlog = () => {
+  const dispatch = useDispatch()
+  const { isLoading, blog } = useSelector((state) => state.blog)
+  const [post, setPost] = useState({})
   const [title, setTitle] = useState("")
   const [category, setCategory] = useState("Nature")
   const [photo, setPhoto] = useState("")
@@ -24,6 +29,10 @@ const CreateBlog = () => {
   const router = useRouter()
   const cloudName = "ddbttkmhz"
   const uploadPreset = "next_blog"
+
+  useEffect(() => {
+    post?._id && router.push(`/blog/${post?.slug}`)
+  }, [router, post])
 
   const config = useMemo(
     () => ({
@@ -72,20 +81,17 @@ const CreateBlog = () => {
     }
 
     try {
-      const { status, message, blog } = await createPost({
-        title,
-        imageUrl,
-        category,
-        cleanContent,
-        authorId: session?.user?._id,
-        token: session.user.accessToken,
-      })
-
-      if (status !== "success") {
-        return toast[status](message)
-      }
-
-      toast[status](message) && router.push(`/blog/${blog?.slug}`)
+      dispatch(
+        createBlogAction({
+          title,
+          imageUrl,
+          category,
+          cleanContent,
+          authorId: session?.user?._id,
+          token: session.user.accessToken,
+        })
+      )
+      setPost(blog)
     } catch (error) {
       console.log(error)
       toast.error(error.message)
@@ -162,7 +168,7 @@ const CreateBlog = () => {
               type="submit"
               className="mt-[2.5rem outline-none border border-solid border-transparent p-[.7rem_1rem] rounded-[6px] bg-[#efefef] text-[#d14201] cursor-pointer transition-[150ms] hover:bg-[#d14201] hover:border-[#d14201] hover:text-[#efefef] md:p-[.4rem_.8rem]"
             >
-              Publish
+              {isLoading ? <Spinner /> : "Publish"}
             </button>
           </div>
           <Jodit editor={editor} config={config} required />

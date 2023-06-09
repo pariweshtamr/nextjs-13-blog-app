@@ -5,6 +5,7 @@ const initialState = {
   blogCount: 0,
   isLoading: false,
   selectedBlog: {},
+  blog: {},
 }
 
 const blogSlice = createSlice({
@@ -13,6 +14,11 @@ const blogSlice = createSlice({
   reducers: {
     requestPending: (state) => {
       state.isLoading = true
+    },
+    createBlogSuccess: (state, { payload }) => {
+      state.isLoading = false
+      state.blog = payload
+      state.selectedBlog = payload
     },
     getBlogsSuccess: (state, { payload }) => {
       state.isLoading = false
@@ -35,6 +41,7 @@ export const {
   requestPending,
   getBlogsSuccess,
   getSelectedBlogSuccess,
+  createBlogSuccess,
   getCount,
 } = actions
 

@@ -9,7 +9,7 @@ import Image from "next/image"
 import Pagination from "@/components/pagination/Pagination"
 import { paginate } from "@/lib/paginate"
 import parse from "html-react-parser"
-import DOMPurify from "dompurify"
+import { sanitize } from "dompurify"
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -85,7 +85,7 @@ const Home = () => {
 
                         <div className="text-[#666] overflow-hidden text-ellipsis block blog-card">
                           {parse(
-                            DOMPurify.sanitize(post?.content, {
+                            sanitize(post?.content, {
                               USE_PROFILES: { html: true },
                             })
                           )}
@@ -127,7 +127,7 @@ const Home = () => {
                         <Link className="" href={`/blog/${post.slug}`}>
                           {post?.imageUrl && (
                             <Image
-                              src={post?.imageUrl}
+                              src={post?.imageUrl || ""}
                               alt="blog-img"
                               width={240}
                               height={240}

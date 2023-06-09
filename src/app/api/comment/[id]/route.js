@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/db"
+import User from "@/models/User"
 import Comment from "@/models/Comment"
 import { verifyJwtToken } from "@/lib/jwt"
 
@@ -20,7 +21,7 @@ export async function DELETE(req, obj) {
   try {
     const comment = await Comment.findById(id).populate({
       path: "authorId",
-      select: "-password, -__v",
+      select: "-password",
       model: User,
     })
     if (comment.authorId._id.toString() !== decodedToken._id.toString()) {

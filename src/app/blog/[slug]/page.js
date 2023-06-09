@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { AiFillDelete, AiFillLike, AiOutlineLike } from "react-icons/ai"
 import { BsFillPencilFill } from "react-icons/bs"
 import { toast } from "react-toastify"
@@ -18,8 +18,8 @@ import Comment from "@/components/comment/Comment"
 import parse from "html-react-parser"
 import { useDispatch, useSelector } from "react-redux"
 import { getSingleBlogAction } from "@/app/redux/blog/blogAction"
-import DOMPurify from "dompurify"
 import avatar from "/public/avatar.jpg"
+import { sanitize } from "dompurify"
 
 const BlogDetails = (obj) => {
   const dispatch = useDispatch()
@@ -30,6 +30,7 @@ const BlogDetails = (obj) => {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState("")
   const { data: session } = useSession()
+
   const router = useRouter()
 
   const handleComment = async (e) => {
@@ -114,27 +115,33 @@ const BlogDetails = (obj) => {
     }
   }
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      const cmnts = await getComments({
-        slug: obj.params.slug,
-      })
-      setComments(cmnts)
-    }
-    fetchComments()
+  const fetchComments = useCallback(async () => {
+    const cmnts = await getComments({
+      slug: obj.params.slug,
+    })
+
+    setComments((prev) => cmnts)
   }, [obj.params.slug])
 
   useEffect(() => {
+    fetchComments()
+  }, [fetchComments])
+
+  useEffect(() => {
     dispatch(getSingleBlogAction(obj.params.slug))
-    setPost((prev) => selectedBlog)
+  }, [dispatch, obj.params.slug])
 
-    if (selectedBlog) {
-      setIsLiked(selectedBlog?.likes?.includes(session?.user?._id))
-      setPostLikes(selectedBlog?.likes?.length || 0)
+  const memoizedBlog = useMemo(() => selectedBlog, [selectedBlog])
+
+  useEffect(() => {
+    if (memoizedBlog) {
+      setPost(memoizedBlog)
+      setIsLiked(memoizedBlog?.likes?.includes(session?.user?._id))
+      setPostLikes(memoizedBlog?.likes?.length || 0)
     }
-  }, [dispatch, obj.params.slug, selectedBlog, session?.user?._id])
+  }, [memoizedBlog, session?.user?._id])
 
-  let clean = DOMPurify.sanitize(selectedBlog?.content, {
+  let clean = sanitize(post?.content, {
     USE_PROFILES: { html: true },
   })
 
@@ -142,24 +149,26 @@ const BlogDetails = (obj) => {
     <div className="min-h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] sm:w-[90%] h-full m-[0_auto] mt-[5rem] flex flex-col items-center">
         <div className="w-[800px] h-auto lg:w-full">
-          <Image
-            src={selectedBlog?.imageUrl}
-            alt="post-img"
-            width={800}
-            height={650}
-            className="object-cover mb-[2.5rem] w-full m-[0_auto]"
-          />
+          {post?.imageUrl && (
+            <Image
+              src={post?.imageUrl}
+              alt="post-img"
+              width={800}
+              height={650}
+              className="object-cover mb-[2.5rem] w-full m-[0_auto]"
+            />
+          )}
         </div>
         <div className="p-[0_1rem] w-[800px] flex justify-between items-start mb-[2rem] lg:w-full">
           <h3 className="text-[36px] sm:text-[20px] md:text-[26px] lg:text-[32px] text-[#333] font-bold capitalize flex flex-col gap-4">
-            {selectedBlog?.title}
+            {post?.title}
             <div className="flex gap-2">
-              {selectedBlog?.authorId?._id !== session?.user?._id && (
+              {post?.authorId?._id !== session?.user?._id && (
                 <>
                   <p className="flex items-center gap-1 text-[14px] text-[#333]">
                     Written by:{" "}
                     <span className="font-[500] text-[#666] text-[14px]">
-                      {selectedBlog?.authorId?.username}
+                      {post?.authorId?.username}
                     </span>
                   </p>
                   <p className="font-bold text-[14px] text-[#333]">|</p>
@@ -167,12 +176,12 @@ const BlogDetails = (obj) => {
               )}
               <p className="font-bold text-[14px] text-[#666]">
                 <span className="font-[500] text-[#666] text-[14px]">
-                  {format(selectedBlog?.createdAt)}
+                  {format(post?.createdAt)}
                 </span>
               </p>
             </div>
           </h3>
-          {selectedBlog?.authorId?._id === session?.user?._id && (
+          {post?.authorId?._id === session?.user?._id && (
             <div className="flex mt-3.5 h-full gap-5 sm:gap-3">
               <Link
                 className="flex items-center outline-none border border-solid border-transparent text-[#000] cursor-pointer text-[18px] font-bold hover:text-[#3eda22]"
@@ -194,7 +203,7 @@ const BlogDetails = (obj) => {
           <div className="flex justify-start items-center gap-[1.25rem] text-[18px] sm:text-[16px] font-bold">
             Category:{" "}
             <span className="p-[0.3rem_1rem] sm:p-[.2rem_.8rem] bg-[#000] text-white rounded-full text-[16px] font-[500] sm:text-[12px]">
-              {selectedBlog?.category}
+              {post?.category}
             </span>
           </div>
           <div className="flex items-center gap-[1rem] cursor-pointer">
@@ -240,7 +249,7 @@ const BlogDetails = (obj) => {
           <div className="max-h-[300px] overflow-auto mt-[1.25rem] w-full p-[1rem] flex flex-col items-center gap-[2rem]">
             {!comments?.length ? (
               <h4 className="p-[1.25rem] sm:p-[1rem] text-[24px] sm:text-lg text-[#222]">
-                No comments. Be the first one to leave a comment!
+                No comments. Login and be the first one to leave a comment!
               </h4>
             ) : (
               comments?.map((comment) => (

@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db"
 import Blog from "@/models/Blog"
+import User from "@/models/User"
 import Comment from "@/models/Comment"
 
 export async function GET(req, obj) {

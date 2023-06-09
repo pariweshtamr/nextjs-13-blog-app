@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/db"
+import User from "@/models/User"
 import Blog from "@/models/Blog"
 import DOMPurify from "isomorphic-dompurify"
 import { verifyJwtToken } from "@/lib/jwt"
@@ -10,7 +11,7 @@ export async function GET(req, obj) {
   try {
     const blog = await Blog.findOne({ slug }).populate({
       path: "authorId",
-      select: "-password, -__v",
+      select: "-password",
       model: User,
     })
 
@@ -18,7 +19,10 @@ export async function GET(req, obj) {
       status: 200,
     })
   } catch (error) {
-    return new Response(JSON.stringify(null), { status: 500 })
+    return new Response(
+      JSON.stringify({ status: "error", message: "Unable to fetch blog!" }),
+      { status: 500 }
+    )
   }
 }
 
