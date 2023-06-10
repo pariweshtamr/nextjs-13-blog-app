@@ -201,7 +201,7 @@ const Home = () => {
               items={sortedPosts?.length}
               currentPage={currentPage}
               pageSize={pageSize}
-              onPageChange={onPageChange}
+              setCurrentPage={setCurrentPage}
             />
           </div>
         </>

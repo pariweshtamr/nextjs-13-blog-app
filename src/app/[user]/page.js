@@ -57,7 +57,9 @@ const Profile = (obj) => {
               />
             ) : (
               <Image
-                src={avatar}
+                src={
+                  session?.user?.profileImg ? session?.user?.profileImg : avatar
+                }
                 alt="profile-img"
                 width={500}
                 height={500}
@@ -118,10 +120,11 @@ const Profile = (obj) => {
           items={sortedPosts?.length}
           currentPage={currentPage}
           pageSize={pageSize}
-          onPageChange={onPageChange}
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </>
   )
 }
+
 export default Profile

@@ -62,6 +62,26 @@ export const getUser = async (id) => {
   }
 }
 
+// update password
+export const updatePassword = async (obj) => {
+  const { id, token, ...rest } = obj
+  try {
+    const obj = {
+      method: "PATCH",
+      url: `${userEp}/${id}`,
+      objData: rest,
+      isPrivate: true,
+      token,
+    }
+    return await axiosProcessor(obj)
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    }
+  }
+}
+
 // post a blog
 export const createPost = async (objData) => {
   const { token, ...rest } = objData

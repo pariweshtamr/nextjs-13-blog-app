@@ -17,7 +17,6 @@ const Login = () => {
   const [form, setForm] = useState(initialState)
   const [reveal, setReveal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const location = usePathname()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -55,7 +54,7 @@ const Login = () => {
     }
   }
   return (
-    <div className="mt-[5rem] h-[calc(100vh - 60px)] w-full">
+    <div className="mt-[1rem] h-[calc(100vh - 60px)] w-full">
       <div className="w-[85%] m-[0_auto] flex flex-col items-center">
         <h2 className="text-[32px] text-[#222] tracking-[1px]">Login</h2>
         <p className="text-[12px] text-[#555]">

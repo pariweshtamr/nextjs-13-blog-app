@@ -56,7 +56,7 @@ const BlogCard = ({ blog }) => {
               alt="blog-img"
               width={350}
               height={350}
-              className="object-cover rounded-md w-full h-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+              className="object-cover rounded-md w-full h-full hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
             />
           )}
         </Link>
