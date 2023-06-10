@@ -95,11 +95,11 @@ const Profile = (obj) => {
             </div>
           </div>
 
-          {/* <div className="mt-5 w-full flex justify-center">
+          <div className="mt-5 w-full flex justify-center">
             <button className="p-[.5rem_1rem] rounded-[5px] bg-[#d14201] text-white hover:shadow-[0_5px_20px_0_rgba(0,0,0,0.2),0_13px_24px_-11px_rgba(156,39,176,0.6)]">
               Update Password
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
 

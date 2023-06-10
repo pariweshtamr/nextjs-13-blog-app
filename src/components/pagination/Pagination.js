@@ -4,7 +4,7 @@ const Pagination = ({ items, currentPage, pageSize, setCurrentPage }) => {
 
   if (pagesCount === 1) return null
 
-  const pages = [...Array(pagesCount).keys()]
+  // const pages = [...Array(pagesCount).keys()]
 
   const prevPage = () => {
     if (currentPage !== 0) {

@@ -8,6 +8,7 @@ import { AiFillLike, AiOutlineLike } from "react-icons/ai"
 import parse from "html-react-parser"
 import DOMPurify from "dompurify"
 import avatar from "../../../public/avatar.jpg"
+import { motion } from "framer-motion"
 
 const BlogCard = ({ blog }) => {
   const { data: session } = useSession()
@@ -46,8 +47,22 @@ const BlogCard = ({ blog }) => {
     session && blog?.likes && setBlogLikes(blog?.likes.length)
   }, [blog?.likes, session])
 
+  const card = {
+    hidden: { opacity: 0, y: 100 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 1, delayChildren: 0.5, staggerChildre: -1 },
+    },
+  }
+
   return (
-    <div className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)] md:min-h-[500px]">
+    <motion.div
+      variants={card}
+      initial="hidden"
+      animate="show"
+      className="w-[full] min-h-[550px] shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.3)] transition-[150ms] rounded-lg hover:shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.4)] md:min-h-[500px]"
+    >
       <div className="p-[.8rem] w-full h-full flex flex-col gap-3 min-xl:min-h-[45rem]">
         <Link className="h-1/2" href={`/blog/${blog.slug}`}>
           {blog?.imageUrl && (
@@ -108,7 +123,7 @@ const BlogCard = ({ blog }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 export default BlogCard

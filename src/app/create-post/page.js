@@ -8,20 +8,18 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { BsFillPlusCircleFill } from "react-icons/bs"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import { createBlogAction } from "../redux/blog/blogAction"
 import Spinner from "@/components/spinner/Spinner"
 import BackButton from "@/components/backButton/BackButton"
+import { createPost } from "@/lib/axiosHelper"
 
 const Jodit = dynamic(() => import("../../components/jodit/Jodit"), {
   ssr: false,
 })
 
 const CreateBlog = () => {
-  const dispatch = useDispatch()
-  const { isLoading, blog } = useSelector((state) => state.blog)
-  const [post, setPost] = useState({})
+  const { isLoading } = useSelector((state) => state.blog)
   const [title, setTitle] = useState("")
   const [category, setCategory] = useState("Nature")
   const [photo, setPhoto] = useState("")
@@ -82,17 +80,20 @@ const CreateBlog = () => {
     }
 
     try {
-      dispatch(
-        createBlogAction({
-          title,
-          imageUrl,
-          category,
-          cleanContent,
-          authorId: session?.user?._id,
-          token: session.user.accessToken,
-        })
-      )
-      setPost(blog)
+      const { status, message, blog } = await createPost({
+        title,
+        imageUrl,
+        category,
+        cleanContent,
+        authorId: session?.user?._id,
+        token: session.user.accessToken,
+      })
+
+      status && toast[status](message)
+
+      if (blog?._id) {
+        router.push(`/blog/${blog?.slug}`)
+      }
     } catch (error) {
       console.log(error)
       toast.error(error.message)
