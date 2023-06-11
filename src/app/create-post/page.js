@@ -29,10 +29,6 @@ const CreateBlog = () => {
   const cloudName = "ddbttkmhz"
   const uploadPreset = "next_blog"
 
-  useEffect(() => {
-    post?._id && router.push(`/blog/${post?.slug}`)
-  }, [router, post])
-
   const config = useMemo(
     () => ({
       readonly: false,
