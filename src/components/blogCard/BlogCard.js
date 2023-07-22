@@ -87,7 +87,7 @@ const BlogCard = ({ blog }) => {
 
           <div className="flex justify-between justify-self-end">
             <div className="flex gap-3">
-              <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
+              <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-[50px] h-[50px]">
                 <Image
                   src={
                     blog?.authorId?.profileImg
@@ -95,9 +95,9 @@ const BlogCard = ({ blog }) => {
                       : avatar
                   }
                   alt="profile-img"
-                  width={45}
-                  height={45}
-                  className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+                  width={1920}
+                  height={1920}
+                  className="object-cover rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)] w-full h-full"
                 />
               </div>
               <div className="flex flex-col justify-center gap-1">

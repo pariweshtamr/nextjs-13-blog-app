@@ -44,14 +44,16 @@ const Navbar = () => {
           {session?.user ? (
             <div>
               {session?.user?.profileImg !== "" ? (
-                <Image
-                  onClick={handleDropDown}
-                  src={session?.user?.profileImg}
-                  alt="profile-img"
-                  width={45}
-                  height={45}
-                  className="object-cover rounded-[50%] cursor-pointer"
-                />
+                <div className="w-[40px] h-[40px]">
+                  <Image
+                    onClick={handleDropDown}
+                    src={session?.user?.profileImg}
+                    alt="profile-img"
+                    width={45}
+                    height={45}
+                    className="object-cover rounded-[50%] cursor-pointer w-full h-full"
+                  />
+                </div>
               ) : (
                 <p
                   onClick={handleShowDropdown}

@@ -19,10 +19,6 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 6
 
-  const onPageChange = (page) => {
-    setCurrentPage((prev) => page)
-  }
-
   useEffect(() => {
     dispatch(getAllBlogsAction())
   }, [dispatch])
@@ -58,7 +54,7 @@ const Home = () => {
             </p>
             <div className="flex gap-2.5 w-[70%] m-[0_auto] my-[2.5rem] mb-[5rem] min-h-[60vh] z-10 md:flex-col md:w-full sm:px-[1.5rem] md:px-[5rem]">
               <div className="w-1/2 h-full md:w-full">
-                {sortedPosts?.length &&
+                {!!sortedPosts?.length &&
                   sortedPosts.slice(0, 1).map((post) => (
                     <div
                       className="p-3 border-2 border-solid border-[#1D2031] rounded-lg flex flex-col min-h-[550px] h-full bg-white"
@@ -93,14 +89,14 @@ const Home = () => {
                         </div>
 
                         <div className="flex gap-3">
-                          <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-max">
+                          <div className="rounded-full border border-solid border-[#1D2031] p-[2px] w-[50px] h-[50px]">
                             {post?.authorId?.profileImg ? (
                               <Image
                                 src={post.authorId.profileImg}
                                 alt="profile-img"
                                 width={60}
                                 height={60}
-                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)] object-cover w-full h-full"
                               />
                             ) : (
                               <Image
@@ -108,7 +104,7 @@ const Home = () => {
                                 alt="profile-img"
                                 width={60}
                                 height={60}
-                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)]"
+                                className="rounded-full shadow-[2px_5px_27px_-8px_rgba(0,0,0,0.6)] object-cover w-full h-full"
                               />
                             )}
                           </div>
@@ -131,7 +127,7 @@ const Home = () => {
               </div>
 
               <div className="w-1/2 min-h-[60vh] flex flex-col justify-around md:w-full">
-                {sortedPosts?.length &&
+                {!!sortedPosts?.length &&
                   sortedPosts?.slice(1, 4).map((post) => (
                     <div className="flex flex-col p-3" key={post._id}>
                       <div className="flex gap-6 h-[10.8rem]">
@@ -156,14 +152,24 @@ const Home = () => {
                           </h3>
 
                           <div className="flex gap-3 sm:gap-2">
-                            <div className="rounded-full border border-solid border-[#333] p-[2px] w-max h-max">
-                              <Image
-                                src={post.authorId.profileImg}
-                                alt="profile-img"
-                                width={40}
-                                height={40}
-                                className="rounded-full"
-                              />
+                            <div className="rounded-full border border-solid border-[#333] p-[2px] w-[50px] h-[50px]">
+                              {post?.authorId?.profileImg ? (
+                                <Image
+                                  src={post.authorId.profileImg}
+                                  alt="profile-img"
+                                  width={1920}
+                                  height={1920}
+                                  className="rounded-full object-cover w-full h-full"
+                                />
+                              ) : (
+                                <Image
+                                  src={avatar}
+                                  alt="profile-img"
+                                  width={1920}
+                                  height={1920}
+                                  className="rounded-full object-cover h-full w-full"
+                                />
+                              )}
                             </div>
                             <div className="flex flex-col justify-center gap-1">
                               <h5 className="font-bold text-[14px] sm:text-xs">
